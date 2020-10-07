@@ -33,7 +33,7 @@ scheme: Paradox
 
 # UI & UX: slogan, color, effect
 uiux:
-    slogan: "Hi, nice to meet you"
+    slogan: "一半时间用来改bug，另一半时间用来写bug"
     theme_color: "#0097A7"
     theme_sub_color: "#00838F"
     hyperlink_color: "#00838F"
@@ -167,7 +167,7 @@ toc:
 
 # SNS Menu
 sns:
-    email: youremail@email.com
+    email: msj1013654754@gmail.com
     facebook: "https://www.facebook.com/facebook"
     twitter: "https://twitter.com/twitter"
     googleplus: "https://www.google.com/"
@@ -190,7 +190,7 @@ sns_share:
     weibo: true
     linkedin: false
     qq: false
-    telegram: false
+    telegram: true
 
 # Sidebar Customize
 sidebar:
