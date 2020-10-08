@@ -108,6 +108,81 @@
       </tags>
   </entry>
   <entry>
+    <title>使用Privoxy翻墙</title>
+    <url>/2020/10/08/%E4%BD%BF%E7%94%A8Privoxy%E7%BF%BB%E5%A2%99/</url>
+    <content><![CDATA[<p>当我们安装了<a href="https://zerorooot.github.io/2020/10/08/Debian-Ubuntu-%E5%AE%89%E8%A3%85-ssr/">ssr后</a>，直接使用是不行的，因为ssr支持的是SOCKS5，而我们要用的是http代理，所以需要privoxy转换</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install privoxy</span><br></pre></td></tr></table></figure>
+
+
+
+<p>安装失败尝试把</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;privoxy.service</span><br><span class="line">中的</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;privoxy  --pidfile $PIDFILE --user $OWNER $CONFIGFILE</span><br><span class="line">换成</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;privoxy  --no-daemon --pidfile $PIDFILE --user $OWNER $CONFIGFILE</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+
+<p>找到 <code>listen-address</code> 确保有这行代码 <code>listen-address 0.0.0.0:8118</code></p>
+<p>找到 <code>forward-socks5</code> 确保有这行代码并且打开注释(没有自己加)<code> forward-socks5 / 127.0.0.1:1080 .</code></p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo service privoxy start</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置环境变量，让终端也能走代理"><a href="#配置环境变量，让终端也能走代理" class="headerlink" title="配置环境变量，让终端也能走代理"></a>配置环境变量，让终端也能走代理</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 全局环境变量</span></span><br><span class="line">sudo vim /etc/profile</span><br><span class="line"><span class="comment"># ======================</span></span><br><span class="line"><span class="comment"># 文件末尾处都添加上以下内容</span></span><br><span class="line"><span class="built_in">export</span> http_proxy=<span class="string">&quot;http://127.0.0.1:8118&quot;</span></span><br><span class="line"><span class="built_in">export</span> https_proxy=<span class="string">&quot;https://127.0.0.1:8118&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="验证一下"><a href="#验证一下" class="headerlink" title="验证一下"></a>验证一下</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>发现可以上了，是不是很开心，再来试一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 搜狐的这个接口能够返回你的IP地址</span></span><br><span class="line">curl  -L tool.lu/ip</span><br></pre></td></tr></table></figure>
+
+<p>发现我们目前在终端任何HTTP连接都走了代理了，这不符合我们的预期，我们希望的让代理走pac模式：需要的连接才代理，不需要的就不用代理。</p>
+<p>好了，我们来看看<code>Privoxy</code>如何使用pac模式，首先需要一个符合<code>Privoxy</code>的pac规则的文件，可以使用<a href="https://github.com/zerorooot/PrivoxyGfwWhiteList">PrivoxyGfwWhiteList</a>来生成。</p>
+<p>首先把<code>/etc/privoxy/config</code>中的<code>forward-socks5 / 127.0.0.1:1080 .</code>这一行注释了</p>
+<h3 id="安装-PrivoxyGfwWhiteList"><a href="#安装-PrivoxyGfwWhiteList" class="headerlink" title="安装 PrivoxyGfwWhiteList"></a>安装 PrivoxyGfwWhiteList</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zerorooot/PrivoxyGfwWhiteList.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> PrivoxyGfwWhiteList</span><br><span class="line"></span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;actionsfile whitelist.action&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br><span class="line"></span><br><span class="line">sudo java whiteList.java 127.0.0.1:1080</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果以后某个pac文件之外的网站也想走代理的话，那么仅需要把域名添加到template.txt文件里面就可以了，</p>
+<h3 id="重启Privoxy，测试代理是否走了pac模式"><a href="#重启Privoxy，测试代理是否走了pac模式" class="headerlink" title="重启Privoxy，测试代理是否走了pac模式"></a>重启Privoxy，测试代理是否走了pac模式</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>OK，没问题，google还是可以访问的；</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl <span class="string">&quot;http://pv.sohu.com/cityjson?ie=utf-8&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个也OK，返回的是我们自己宽带的IP，也没问题。</p>
+<h3 id="过滤本机地址"><a href="#过滤本机地址" class="headerlink" title="过滤本机地址"></a>过滤本机地址</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+
+<p>在最后添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">forward         192.168.*.*&#x2F;     .</span><br><span class="line">forward           127.*.*.*&#x2F;     .</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="再其他设备上翻墙"><a href="#再其他设备上翻墙" class="headerlink" title="再其他设备上翻墙"></a>再其他设备上翻墙</h3><p>在配置好上述步骤后，且确保有这行代码 <code>listen-address 0.0.0.0:8118</code>后，就可以通过代理的方式，使其他设备翻墙</p>
+<p>（要求此设备要和要翻墙的设备处于同一局域网下，即连同一个路由器</p>
+<h4 id="查看本机地址"><a href="#查看本机地址" class="headerlink" title="查看本机地址"></a>查看本机地址</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+
+<p>找到eth0或者wlan0下的 <code>inet</code>，此为你设备的ip地址</p>
+<h4 id="Android系统"><a href="#Android系统" class="headerlink" title="Android系统"></a>Android系统</h4><p>1.点击“设置”，进入WiFi列表，长按要修改代理的WiFi。</p>
+<p>2.弹出菜单中选择“修改网络”，或“连接到网络”。 </p>
+<p>3.弹出窗口底部勾选“高级选项-代理设置：列表中选择手动”。 </p>
+<p>4.服务器主机名填写刚刚看到的ip，服务器端口填写8118，保存后即可。</p>
+<h4 id="ios"><a href="#ios" class="headerlink" title="ios"></a>ios</h4><ol>
+<li>打开<strong>设置</strong> 进入<strong>设置</strong>，选择无线局域网</li>
+<li>进入wifi详细<strong>设置</strong> 找到已连接的wifi，点击最右侧的小图标</li>
+<li>配置<strong>代理</strong> 进入 配置<strong>代理</strong> 界面 选择“手动” 字段 填写方法 服务器 填入 刚刚看到的ip. 端口 8118</li>
+</ol>
+<h4 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h4><ol>
+<li>首先，按下键盘的win键，就是<strong>windows</strong> 图标。 然后再开始菜单中单击“<strong>设置</strong>”。</li>
+<li>然后，再出现的<strong>设置</strong>面板中，单击“网络和Internet”。</li>
+<li>单击“<strong>代理</strong>”。 你就会看到右侧有关<strong>代理</strong>的详细<strong>设置</strong>。</li>
+<li>下面，接下来看下手动代理，地址 填入 刚刚看到的ip. 端口 8118</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>privoxy</tag>
+        <tag>翻墙</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用ProxyChains-NG翻墙</title>
     <url>/2020/10/08/%E4%BD%BF%E7%94%A8ProxyChains-NG%E7%BF%BB%E5%A2%99/</url>
     <content><![CDATA[<p>proxychains通过hook系统相关代码，从而重定向连接到自定义的SOCKS4a/5 或 HTTP代理，从而实现翻墙的功能</p>
@@ -124,6 +199,34 @@
 ]]></content>
       <tags>
         <tag>翻墙</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用privoxy去广告</title>
+    <url>/2020/10/08/%E4%BD%BF%E7%94%A8privoxy%E5%8E%BB%E5%B9%BF%E5%91%8A/</url>
+    <content><![CDATA[<p>用完privoxy翻墙后，感觉只拿来翻墙有点浪费，而且去广告也算是一个毕竟刚需的内容，所以就有了这篇文章</p>
+<h1 id="使用privoxy-adblock去广告"><a href="#使用privoxy-adblock去广告" class="headerlink" title="使用privoxy-adblock去广告"></a>使用privoxy-adblock去广告</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/zerorooot/privoxy-adblock/master/privoxy-adblock.sh</span><br><span class="line">sudo bash privoxy-adblock.sh</span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;actionsfile easylist.script.action&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;filterfile easylist.script.filter&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义去广告"><a href="#自定义去广告" class="headerlink" title="自定义去广告"></a>自定义去广告</h1><p>自定义去广告也使用privoxy-adblock去广告并不冲突，二者可以一起使用</p>
+<p>在之前的privoxy翻墙文章里，我们使用了<a href="https://github.com/zerorooot/PrivoxyGfwWhiteList">PrivoxyGfwWhiteList</a>来翻墙，这次，我们使用它来去广告</p>
+<p>在 <code>template.txt</code>的上面，添加一行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">banad = +forward-override&#123;forward 127.0.0.1:444&#125;</span><br></pre></td></tr></table></figure>
+
+<p>444端口是随意指定的，只要不让网站转发到真实服务器就好</p>
+<p>然后，在 <code>template.txt</code>的最尾，添加</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;banad&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在{banad}下面输入抓包得来的广告网址，如</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;banad&#125;</span><br><span class="line">www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<p>这样，百度就访问不了了</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+]]></content>
+      <tags>
+        <tag>privoxy</tag>
+        <tag>ad</tag>
       </tags>
   </entry>
   <entry>

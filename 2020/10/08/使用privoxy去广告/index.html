@@ -22,16 +22,22 @@
     var CONFIG = {"hostname":"zerorooot.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="zerorooot的小屋">
-<meta property="og:url" content="https://zerorooot.github.io/tags/swap/index.html">
+  <meta name="description" content="wget https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;privoxy-adblock&#x2F;master&#x2F;privoxy-adblock.sh &amp;&amp; sudo bash privoxy-adblock.sh &amp;&amp; sudo bash -c &#39;echo &quot;actionsfile easylist.script.action&quot; &gt;&gt; &#x2F;etc&#x2F;privoxy&#x2F;co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用privoxy去广告">
+<meta property="og:url" content="https://zerorooot.github.io/2020/10/08/%E4%BD%BF%E7%94%A8privoxy%E5%8E%BB%E5%B9%BF%E5%91%8A/index.html">
 <meta property="og:site_name" content="zerorooot的小屋">
+<meta property="og:description" content="wget https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;privoxy-adblock&#x2F;master&#x2F;privoxy-adblock.sh &amp;&amp; sudo bash privoxy-adblock.sh &amp;&amp; sudo bash -c &#39;echo &quot;actionsfile easylist.script.action&quot; &gt;&gt; &#x2F;etc&#x2F;privoxy&#x2F;co">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-08T13:47:25.000Z">
+<meta property="article:modified_time" content="2020-10-08T14:14:49.873Z">
 <meta property="article:author" content="zerorooot">
+<meta property="article:tag" content="privoxy">
+<meta property="article:tag" content="ad">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://zerorooot.github.io/tags/swap/">
+<link rel="canonical" href="https://zerorooot.github.io/2020/10/08/%E4%BD%BF%E7%94%A8privoxy%E5%8E%BB%E5%B9%BF%E5%91%8A/">
 
 
 <script class="page-configurations">
@@ -39,12 +45,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: swap | zerorooot的小屋</title>
+  <title>使用privoxy去广告 | zerorooot的小屋</title>
   
 
 
@@ -182,7 +188,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -194,6 +200,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8privoxy-adblock%E5%8E%BB%E5%B9%BF%E5%91%8A"><span class="nav-number">1.</span> <span class="nav-text">使用privoxy-adblock去广告</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%8E%BB%E5%B9%BF%E5%91%8A"><span class="nav-number">2.</span> <span class="nav-text">自定义去广告</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -252,54 +259,130 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
       
 
       
 
   
+
+
+<div class="post-block">
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">swap
-          <small>标签</small>
-        </h2>
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zerorooot.github.io/2020/10/08/%E4%BD%BF%E7%94%A8privoxy%E5%8E%BB%E5%B9%BF%E5%91%8A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zerorooot">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zerorooot的小屋">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用privoxy去广告
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2020-10-08 21:47:25 / 修改时间：22:14:49" itemprop="dateCreated datePublished" datetime="2020-10-08T21:47:25+08:00">2020-10-08</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
       </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>790</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
 
-      
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+            <div class="post-description">wget https://raw.githubusercontent.com/zerorooot/privoxy-adblock/master/privoxy-adblock.sh && sudo bash privoxy-adblock.sh && sudo bash -c 'echo "actionsfile easylist.script.action" >> /etc/privoxy/config' && sudo bash -c 'echo "filterfile easylist.script.filter" >> /etc/privoxy/config'</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>用完privoxy翻墙后，感觉只拿来翻墙有点浪费，而且去广告也算是一个毕竟刚需的内容，所以就有了这篇文章</p>
+<h1 id="使用privoxy-adblock去广告"><a href="#使用privoxy-adblock去广告" class="headerlink" title="使用privoxy-adblock去广告"></a>使用privoxy-adblock去广告</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/zerorooot/privoxy-adblock/master/privoxy-adblock.sh</span><br><span class="line">sudo bash privoxy-adblock.sh</span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;actionsfile easylist.script.action&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;filterfile easylist.script.filter&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义去广告"><a href="#自定义去广告" class="headerlink" title="自定义去广告"></a>自定义去广告</h1><p>自定义去广告也使用privoxy-adblock去广告并不冲突，二者可以一起使用</p>
+<p>在之前的privoxy翻墙文章里，我们使用了<a target="_blank" rel="noopener" href="https://github.com/zerorooot/PrivoxyGfwWhiteList">PrivoxyGfwWhiteList</a>来翻墙，这次，我们使用它来去广告</p>
+<p>在 <code>template.txt</code>的上面，添加一行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">banad = +forward-override&#123;forward 127.0.0.1:444&#125;</span><br></pre></td></tr></table></figure>
+
+<p>444端口是随意指定的，只要不让网站转发到真实服务器就好</p>
+<p>然后，在 <code>template.txt</code>的最尾，添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;banad&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在{banad}下面输入抓包得来的广告网址，如</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;banad&#125;</span><br><span class="line">www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<p>这样，百度就访问不了了</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-10-08T20:20:22+08:00"
-              content="2020-10-08">
-          10-08
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/10/08/linux%E7%B3%BB%E7%BB%9F%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0swap%E5%88%86%E5%8C%BA/" itemprop="url">
-            <span itemprop="name">linux系统如何添加swap分区</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/privoxy/" rel="tag"># privoxy</a>
+              <a href="/tags/ad/" rel="tag"># ad</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/10/08/%E4%BD%BF%E7%94%A8Privoxy%E7%BF%BB%E5%A2%99/" rel="prev" title="使用Privoxy翻墙">
+                  <i class="fa fa-chevron-left"></i> 使用Privoxy翻墙
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
+</div>
 
-    </div>
-  </div>
-  
-  
-  
 
-  
+
 
 
 
