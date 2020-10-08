@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Debian-Ubuntu-安装-ssr</title>
+    <url>/2020/10/08/Debian-Ubuntu-%E5%AE%89%E8%A3%85-ssr/</url>
+    <content><![CDATA[<h1 id="完整版"><a href="#完整版" class="headerlink" title="完整版"></a>完整版</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev git make libsodium-dev -y</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocksrr/shadowsocksr-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocksr-libev.git</span><br><span class="line">./configure</span><br><span class="line">修改 src/Makefile.in 和 src/Makefile.am 文件，删除中间的 -Werror</span><br><span class="line">make</span><br><span class="line">配置config.json文件</span><br><span class="line">./src/ss-local -c config.json</span><br></pre></td></tr></table></figure>
+
+<h1 id="详细版"><a href="#详细版" class="headerlink" title="详细版"></a>详细版</h1><h2 id="安装编译环境"><a href="#安装编译环境" class="headerlink" title="安装编译环境"></a>安装编译环境</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev git make  -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载ssr-amp-配置"><a href="#下载ssr-amp-配置" class="headerlink" title="下载ssr &amp; 配置"></a>下载ssr &amp; 配置</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocksrr/shadowsocksr-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocksr-libev.git</span><br><span class="line">./configure</span><br></pre></td></tr></table></figure>
+
+<p>(虽然写着是ss，但实际用起来是ssr)</p>
+<p>如果这时直接make的话，会报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acl.c:74:90: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 50 and 176 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;ip6tables -N %s; ip6tables -F %s; ip6tables -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">                                                                                          ^~</span><br><span class="line">acl.c:158:68:</span><br><span class="line">         sprintf(cli, ip6tables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                    ~~~~~~~~~~</span><br><span class="line">acl.c:158:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 81 and 270 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, ip6tables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:67:87: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 53 and 179 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;iptables -N %s; iptables -F %s; iptables -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">                                                                                       ^~</span><br><span class="line">acl.c:160:67:</span><br><span class="line">         sprintf(cli, iptables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                   ~~~~~~~~~~</span><br><span class="line">acl.c:160:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 78 and 267 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, iptables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:92:5: error: <span class="string">&#x27;;      firewall-cmd --direct...&#x27;</span> directive writing 88 bytes into a region of size between 33 and 159 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --add-chain ipv6 filter %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv6 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv6 -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:153:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 186 and 375 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld6_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:81:5: error: <span class="string">&#x27;;      firewall-cmd --direct...&#x27;</span> directive writing 88 bytes into a region of size between 33 and 159 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --add-chain ipv4 filter %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv4 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv4 -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:155:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 186 and 375 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c: In <span class="keyword">function</span> <span class="string">&#x27;free_block_list&#x27;</span>:</span><br><span class="line">acl.c:96:5: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 61 and 124 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --passthrough ipv6 -D OUTPUT -p tcp --tcp-flags RST RST -j %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv6 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --remove-chain ipv6 filter %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:184:59:</span><br><span class="line">         sprintf(cli, firewalld6_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                           ~~~~~~~~~~</span><br><span class="line">acl.c:184:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 189 and 378 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld6_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:85:5: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 61 and 124 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --passthrough ipv4 -D OUTPUT -p tcp --tcp-flags RST RST -j %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv4 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --remove-chain ipv4 filter %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:186:58:</span><br><span class="line">         sprintf(cli, firewalld_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                          ~~~~~~~~~~</span><br><span class="line">acl.c:186:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 189 and 378 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:76:90: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 50 and 176 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;ip6tables -D OUTPUT -p tcp --tcp-flags RST RST -j %s; ip6tables -F %s; ip6tables -X %s&quot;</span>;</span><br><span class="line">                                                                                          ^~</span><br><span class="line">acl.c:179:70:</span><br><span class="line">         sprintf(cli, ip6tables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                      ~~~~~~~~~~</span><br><span class="line">acl.c:179:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 81 and 270 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, ip6tables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:69:87: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 53 and 179 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;iptables -D OUTPUT -p tcp --tcp-flags RST RST -j %s; iptables -F %s; iptables -X %s&quot;</span>;</span><br><span class="line">                                                                                       ^~</span><br><span class="line">acl.c:181:69:</span><br><span class="line">         sprintf(cli, iptables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                     ~~~~~~~~~~</span><br><span class="line">acl.c:181:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 78 and 267 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, iptables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">cc1: all warnings being treated as errors</span><br><span class="line">make[2]: *** [Makefile:778: libshadowsocks_libev_la-acl.lo] Error 1</span><br><span class="line">make[2]: Leaving directory <span class="string">&#x27;/home/ubuntu/application/shadowsocksr-libev/src&#x27;</span></span><br><span class="line">make[1]: *** [Makefile:478: all-recursive] Error 1</span><br><span class="line">make[1]: Leaving directory <span class="string">&#x27;/home/ubuntu/application/shadowsocksr-libev&#x27;</span></span><br><span class="line">make: *** [Makefile:387: all] Error 2</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><p>所以，<a href="https://github.com/shadowsocksrr/shadowsocksr-libev/issues/40#issuecomment-413930246">需要修改</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">修改 src/Makefile.in 和 src/Makefile.am 文件，删除中间的 -Werror</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置config-json文件"><a href="#配置config-json文件" class="headerlink" title="配置config.json文件"></a>配置config.json文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;server&quot;</span>: <span class="string">&quot;1.1.1.1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;server_ipv6&quot;</span>: <span class="string">&quot;::&quot;</span>,</span><br><span class="line">    <span class="string">&quot;server_port&quot;</span>: 7324,</span><br><span class="line">    <span class="string">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;local_port&quot;</span>: 1080,</span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;password&quot;</span>: <span class="string">&quot;abcdefg&quot;</span>,</span><br><span class="line">    <span class="string">&quot;method&quot;</span>: <span class="string">&quot;none&quot;</span>,</span><br><span class="line">    <span class="string">&quot;protocol&quot;</span>: <span class="string">&quot;auth_chain_a&quot;</span>,</span><br><span class="line">    <span class="string">&quot;protocol_param&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;obfs&quot;</span>: <span class="string">&quot;tls1.2_ticket_auth&quot;</span>,</span><br><span class="line">    <span class="string">&quot;obfs_param&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;speed_limit_per_con&quot;</span>: 0,</span><br><span class="line">    <span class="string">&quot;speed_limit_per_user&quot;</span>: 0,</span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;additional_ports&quot;</span> : &#123;&#125;,</span><br><span class="line">    <span class="string">&quot;additional_ports_only&quot;</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&quot;timeout&quot;</span>: 120,</span><br><span class="line">    <span class="string">&quot;udp_timeout&quot;</span>: 60,</span><br><span class="line">    <span class="string">&quot;dns_ipv6&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&quot;connect_verbose_info&quot;</span>: 0,</span><br><span class="line">    <span class="string">&quot;redirect&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把server改成你ssr的ip，server_port改成你ssr的端口，password改成你ssr的密码，method，protocol，obfs 分别安装机场给你的填</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;src&#x2F;ss-local -c config.json</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Debian</tag>
+        <tag>Ubuntu</tag>
+        <tag>ssr</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux系统如何添加swap分区</title>
+    <url>/2020/10/08/linux%E7%B3%BB%E7%BB%9F%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0swap%E5%88%86%E5%8C%BA/</url>
+    <content><![CDATA[<p>安装dphys-swap服务 <code>sudo apt-get install dphys-swapfile -y</code> </p>
+<p>编辑/etc/dphys-swapfile</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;dphys-swapfile</span><br></pre></td></tr></table></figure>
+
+<p>将 CONF_SWAPSIZE 的值修改成你想要的大小。 一般在内存小于2G的情况下，交换分区应为内存的2倍!(树莓派的话是2G最好)</p>
+<p>然后，重新启动 dphys-swapfile 文件服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo &#x2F;etc&#x2F;init.d&#x2F;dphys-swapfile restart</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>swap</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>raspberrypi如何pppoe拨号</title>
+    <url>/2020/10/08/raspberrypi%E5%A6%82%E4%BD%95pppoe%E6%8B%A8%E5%8F%B7/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install pppoe pppoeconf  -y</span><br><span class="line">sudo pppoeconf</span><br></pre></td></tr></table></figure>
+
+<p>配置文件在</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/ppp/pap-secrets</span><br></pre></td></tr></table></figure>
+
+<p>您可以通过</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo pon dsl-provider</span><br></pre></td></tr></table></figure>
+<p>来建立连接和通过</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo poff dsl-provider</span><br></pre></td></tr></table></figure>
+<p> 来中断连接</p>
+]]></content>
+      <tags>
+        <tag>raspberrypi</tag>
+        <tag>pppoe</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>raspberrypi如何开热点</title>
+    <url>/2020/10/08/raspberrypi%E5%A6%82%E4%BD%95%E5%BC%80%E7%83%AD%E7%82%B9/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;oblique&#x2F;create_ap </span><br><span class="line">cd create_ap </span><br><span class="line">sudo apt install util-linux procps hostapd iproute2 iw haveged dnsmasq iptables make -y</span><br><span class="line">sudo make install </span><br><span class="line">sudo create_ap wlan0 eth0 rasberry 1234567890</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>raspberry pi</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tomcat9使用root执行程序</title>
+    <url>/2020/10/08/tomcat9%E4%BD%BF%E7%94%A8root%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F/</url>
+    <content><![CDATA[<h5 id="添加环境"><a href="#添加环境" class="headerlink" title="添加环境"></a>添加环境</h5><p>sudo vim /lib/systemd/system/tomcat9.service</p>
+<p>注释原来的</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">AmbientCapabilities&#x3D;CAP_NET_BIND_SERVICE</span><br><span class="line">NoNewPrivileges&#x3D;true</span><br></pre></td></tr></table></figure>
+
+<p>添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NoNewPrivileges&#x3D;false</span><br><span class="line">AmbientCapabilities&#x3D;CAP_SETGID CAP_SETUID</span><br><span class="line">SecureBits&#x3D;keep-caps</span><br></pre></td></tr></table></figure>
+
+<h5 id="给tomcat用户设置密码"><a href="#给tomcat用户设置密码" class="headerlink" title="给tomcat用户设置密码"></a>给tomcat用户设置密码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo passwd tomcat</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加到sudo用户组"><a href="#添加到sudo用户组" class="headerlink" title="添加到sudo用户组"></a>添加到sudo用户组</h5><p>sudo vim /etc/sudoers</p>
+<p>在root    ALL=(ALL:ALL) ALL后，添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tomcat  ALL&#x3D;(ALL:ALL) ALL</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &quot;你设置的tomcat密码&quot; | sudo -S 要执行的命令</span><br></pre></td></tr></table></figure>
+
+<h5 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h5><p><strong>更改tomcat9的UMASK</strong></p>
+<p>/usr/share/tomcat9/bin目录下如果没有setenv.sh,添加此文件,内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">UMASK&#x3D;0022</span><br></pre></td></tr></table></figure>
+
+<p>使此文件可执行:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo chmod +x setenv.sh</span><br></pre></td></tr></table></figure>
+
+<p>重新启动tomcat9</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart tomcat9</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>强制apt使用ipv4</title>
+    <url>/2020/10/08/%E5%BC%BA%E5%88%B6apt%E4%BD%BF%E7%94%A8ipv4/</url>
+    <content><![CDATA[<p>echo ‘Acquire::ForceIPv4 “true”;’ | sudo tee /etc/apt/apt.conf.d/99force-ipv4</p>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>apt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>配置samba服务</title>
+    <url>/2020/10/08/%E9%85%8D%E7%BD%AEsamba%E6%9C%8D%E5%8A%A1/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install samba</span><br></pre></td></tr></table></figure>
+
+
+<p>添加用户(下面的ubuntu是我的用户名，之后会需要设置samba的密码)。 </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo smbpasswd -a ubuntu</span><br><span class="line">sudo vim /etc/samba/smb.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[ubuntu]</span><br><span class="line">comment &#x3D; share folder</span><br><span class="line">browseable &#x3D; yes</span><br><span class="line">path &#x3D; &#x2F;home&#x2F;ubuntu</span><br><span class="line">create mask &#x3D; 0700</span><br><span class="line">directory mask &#x3D; 0700</span><br><span class="line">valid users &#x3D; ubuntu</span><br><span class="line">force user &#x3D; ubuntu</span><br><span class="line">force group &#x3D; ubuntu</span><br><span class="line">public &#x3D; no</span><br><span class="line">available &#x3D; yes</span><br><span class="line">writable &#x3D; yes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>测试你配置的smb.conf是否正确，用下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">testparm</span><br></pre></td></tr></table></figure>
+
+<p>重启samba服务器。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo service smbd restart</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>samba</tag>
+      </tags>
+  </entry>
+</search>
