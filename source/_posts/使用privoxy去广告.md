@@ -4,7 +4,7 @@ tags:
   - privoxy
   - ad
 date: 2020-10-08 21:47:25
-description:wget https://raw.githubusercontent.com/zerorooot/privoxy-adblock/master/privoxy-adblock.sh && sudo bash privoxy-adblock.sh && sudo bash -c 'echo "actionsfile easylist.script.action" >> /etc/privoxy/config' && sudo bash -c 'echo "filterfile easylist.script.filter" >> /etc/privoxy/config'
+description: wget https://raw.githubusercontent.com/zerorooot/privoxy-adblock/master/privoxy-adblock.sh && sudo bash privoxy-adblock.sh && sudo bash -c 'echo "actionsfile easylist.script.action" >> /etc/privoxy/config' && sudo bash -c 'echo "filterfile easylist.script.filter" >> /etc/privoxy/config'
 ---
 用完privoxy翻墙后，感觉只拿来翻墙有点浪费，而且去广告也算是一个毕竟刚需的内容，所以就有了这篇文章
 

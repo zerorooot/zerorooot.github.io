@@ -4,9 +4,9 @@ tags:
   - privoxy
   - 翻墙
 date: 2020-10-08 21:34:53
-description:当我们安装了ssr后，直接使用是不行的，因为ssr支持的是SOCKS5，而我们要用的是http代理，所以需要privoxy转换
+description: 当我们安装了ssr后，直接使用是不行的，因为ssr支持的是SOCKS5，而我们要用的是http代理，所以需要privoxy转换
 ---
-sr后](https://zerorooot.github.io/2020/10/08/Debian-Ubuntu-%E5%AE%89%E8%A3%85-ssr/)，直接使用是不行的，因为ssr支持的是SOCKS5，而我们要用的是http代理，所以需要privoxy转换
+当我们安装了[ssr后](https://zerorooot.github.io/2020/10/08/Debian-Ubuntu-%E5%AE%89%E8%A3%85-ssr/)，直接使用是不行的，因为ssr支持的是SOCKS5，而我们要用的是http代理，所以需要privoxy转换
 
 ### 安装
 
