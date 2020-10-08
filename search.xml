@@ -202,6 +202,141 @@
       </tags>
   </entry>
   <entry>
+    <title>使用ZeroProxy去广告</title>
+    <url>/2020/10/08/%E4%BD%BF%E7%94%A8ZeroProxy%E5%8E%BB%E5%B9%BF%E5%91%8A/</url>
+    <content><![CDATA[<p>之前使用privoxy去广告，文末说了，只能屏蔽http开头的网址，而这次使用ZeroProxy可以屏蔽https类的广告了</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="下载-amp-编译"><a href="#下载-amp-编译" class="headerlink" title="下载&amp;编译"></a>下载&amp;编译</h2><p>安装<a href="https://maven.apache.org/download.cgi">maven</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;zerorooot&#x2F;ZeroProxy.git</span><br><span class="line">cd ZeroProxy</span><br><span class="line">mvn assembly:assembly</span><br></pre></td></tr></table></figure>
+
+<p>这样，就在target目录下生成了我们需要的ZeroProxy-1.0-jar-with-dependencies.jar文件。</p>
+<h2 id="安装证书"><a href="#安装证书" class="headerlink" title="安装证书"></a>安装证书</h2><p>下载项目中的src/resources/ca.crt，导入到正确位置。如何导入还请自行搜索</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">注：Android 7以及以上，系统不再信任用户安装的证书，你需要root后，下载src&#x2F;test&#x2F;913718f3.0，然后把文件移动到</span><br><span class="line">&#x2F;system&#x2F;etc&#x2F;security&#x2F;cacerts&#x2F;</span><br><span class="line">并给与644权限</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar target/ZeroProxy-1.0-jar-with-dependencies.jar ip port configFile account password</span><br></pre></td></tr></table></figure>
+
+<h3 id="ip"><a href="#ip" class="headerlink" title="ip"></a>ip</h3><p>指你的ip地址，为了分享给其他设备使用，这里建议使用内网地址，如 192.168.123.164</p>
+<h3 id="port"><a href="#port" class="headerlink" title="port"></a>port</h3><p>指ZeroProxy运行的端口，如 9999</p>
+<h3 id="configFile"><a href="#configFile" class="headerlink" title="configFile"></a>configFile</h3><p>用于存放配置文件的文件夹，要求绝对目录，如 D:\JavaCode\ZeroProxy\src\test</p>
+<h3 id="account-amp-password"><a href="#account-amp-password" class="headerlink" title="account&amp;password"></a>account&amp;password</h3><p>网页端的账号和密码，这两项不是必要的，不填的话，默认关闭网页控制。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java -jar target\ZeroProxy-1.0-jar-with-dependencies.jar 192.168.123.164 9999 D:\JavaCode\ZeroProxy\src\test admin 123456</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h2><h3 id="window"><a href="#window" class="headerlink" title="window"></a>window</h3><p>设置–》网络和internet–》代理–》手动设置代理–》使用代理服务器其中，地址就是你设置的ip地址，端口就是你设置的端口。在本例子中，地址是192.168.123.164，端口是9999</p>
+<p>或</p>
+<p>在chrome中下载<a href="chrome-extension://padekgcemlokbadohgkifijomclgjgif/options.html#!/about">SwitchyOmega</a>，设置代理协议为http，代理服务器以及代理端口均为你输入的。</p>
+<h3 id="android"><a href="#android" class="headerlink" title="android"></a>android</h3><p>设置–》wlan和互联网–》wlan–》点击你目前使用的wifi–》点击右上角的“✏”–》高级选项–》代理–》手动–》代理服务器主机名为你设置的IP，代理服务器端口为你设置的端口–》保存</p>
+<h3 id="ios"><a href="#ios" class="headerlink" title="ios"></a>ios</h3><p>设置–》无线局域网络–》点击你目前使用的wifi–》最下面，http代理–》手动–》服务器为你设置的IP，端口为你设置的端口–》储存</p>
+<h1 id="注：必须安装好证书，不然没法使用！！！"><a href="#注：必须安装好证书，不然没法使用！！！" class="headerlink" title="注：必须安装好证书，不然没法使用！！！"></a>注：必须安装好证书，不然没法使用！！！</h1><h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>好了，现在程序已经运行起来了，但还不能去广告，因为我们没有配置相关内容</p>
+<p>由于我们开启了网页控制，所以直接进入 <a href="http://ip:port/index.html配置即可。">http://ip:port/index.html配置即可。</a></p>
+<p>如果你没有开启网页界面，请在configFile下的config.txt里进行配置</p>
+<h2 id="处理网址"><a href="#处理网址" class="headerlink" title="处理网址"></a>处理网址</h2><p>对所有的网址都要进行处理，不然无法得到你想要的结果。</p>
+<p>需要删除开头的</p>
+<p><strong>https://</strong></p>
+<p>以及后面的参数（“？”以及“？”后的内容）。</p>
+<h3 id="例"><a href="#例" class="headerlink" title="例"></a>例</h3><p>假设，通过抓包，找到了此网址为广告地址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;123.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除</strong>网址前面的 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>和网址“?”以及后面的内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p>把</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;123.txt</span><br></pre></td></tr></table></figure>
+
+<p>输入到配置文件里</p>
+<h2 id="拦截请求"><a href="#拦截请求" class="headerlink" title="拦截请求"></a>拦截请求</h2><h3 id="普通拦截"><a href="#普通拦截" class="headerlink" title="普通拦截"></a>普通拦截</h3><p>把</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;123.txt</span><br></pre></td></tr></table></figure>
+
+<p>输入到文本框里，并点击更改。</p>
+<p>最终效果是这样的👇</p>
+<p><img src="image-20200725192302167.png" alt="image-20200725192302167"></p>
+<p>然后，再次进入</p>
+<p><a href="https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt?signal=12fsaw34567&amp;time=8765431352">https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt?signal=12fsaw34567&amp;time=8765431352</a></p>
+<p>我们发现，网址被重定向到了127.0.0.1，成功实现了网址拦截</p>
+<h3 id="正则拦截"><a href="#正则拦截" class="headerlink" title="正则拦截"></a>正则拦截</h3><p>但要是每次请求的网址都有变呢？难道要把所有的网址都存下来吗？明显不现实。</p>
+<p>注释“raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt”</p>
+<p>新加一条</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;\d*.txt</span><br></pre></td></tr></table></figure>
+
+<p>输入到文本框里，并点击更改。</p>
+<p>最终效果是这样的👇</p>
+<p><img src="image-20200725193153710.png" alt="image-20200725193153710"></p>
+<p>进入</p>
+<p><a href="https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/345.txt">https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/345.txt</a></p>
+<p>和</p>
+<p><a href="https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt">https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt</a></p>
+<p>发现均被拦截。</p>
+<h3 id="检测书写规则是否奏效"><a href="#检测书写规则是否奏效" class="headerlink" title="检测书写规则是否奏效"></a>检测书写规则是否奏效</h3><p>由于正则可能存在转义等一堆问题，难道要没次都傻傻的进入被拦截的网址测试吗？明显太蠢了。</p>
+<p>点击最下方的 “<u>返回主页</u>”</p>
+<p>在最上面，看到要测试的url。输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;345.txt</span><br></pre></td></tr></table></figure>
+
+<p>返回的是true，证明我们书写的正则奏效了。</p>
+<h3 id="注"><a href="#注" class="headerlink" title="注"></a>注</h3><p>拦截请求这么配置就ok了。注意的是，对于某广告网址，需要先删除开头的https://,以及后面的参数（“？”以及“？”后的内容）。</p>
+<h2 id="更改返回的json"><a href="#更改返回的json" class="headerlink" title="更改返回的json"></a>更改返回的json</h2><p>假设，通过抓包，找到了json的返回网址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;json.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<h3 id="替换模式"><a href="#替换模式" class="headerlink" title="替换模式"></a>替换模式</h3><p>替换模式是指替换json里某个值</p>
+<p>把刚才抓到的包经过处理后，在最前面加上”@”,加入文本框，并点击更改。</p>
+<p>最终效果是这样的👇</p>
+<p><img src="image-20200725201053792.png" alt="image-20200725201053792"></p>
+<p>我们发现，在最上方，<strong>出现了此网站的网址</strong>，点击。</p>
+<p>输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">f.0.a.pic&#x3D;1</span><br></pre></td></tr></table></figure>
+
+<p>保存，再次进入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;json.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p>我们发现，返回的json变成了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;&quot;f&quot;:[&#123;&quot;a&quot;:&#123;&quot;pic&quot;:1&#125;,&quot;b&quot;:&quot;c&quot;&#125;,&#123;&quot;a&quot;:&#123;&quot;pic&quot;:&quot;a&quot;&#125;,&quot;b&quot;:&quot;c&quot;,&quot;d&quot;:&quot;e&quot;&#125;],&quot;test&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功实现了替换。</p>
+<h4 id="替换的规则"><a href="#替换的规则" class="headerlink" title="替换的规则"></a>替换的规则</h4><p>从刚才的例子可以看出，替换的规则非常的简单，即</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">节点.节点.节点&#x3D;你想要的值</span><br></pre></td></tr></table></figure>
+
+<p>在此例子中，我们把jsonObject中的“f”，中的jsonArray“0”，中的jsonObject“a”，中的jsonObject“pic”，从123改成了1</p>
+<p>如果对此不熟练的话，可以点击网页最下方的“返回主页”，将要测试的json输入“要测试的json：”里，将你使用的规则输入“使用的规则：”里，点击检测即可</p>
+<h3 id="删除模式"><a href="#删除模式" class="headerlink" title="删除模式"></a>删除模式</h3><p>删除模式是指，当某节点的值等于你输入的值时，删除某节点</p>
+<p>添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">f.0.a.pic@&#x3D;.*@f.1.a</span><br></pre></td></tr></table></figure>
+
+<p>保存，最终效果是这样的👇</p>
+<p><img src="image-20200725210235848.png" alt="image-20200725210235848"></p>
+<p>进入再次进入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;json.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p>我们发现，返回的json变成了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;&quot;f&quot;:[&#123;&quot;a&quot;:&#123;&quot;pic&quot;:1&#125;,&quot;b&quot;:&quot;c&quot;&#125;,&#123;&quot;b&quot;:&quot;c&quot;,&quot;d&quot;:&quot;e&quot;&#125;],&quot;test&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功实现了对f.1.a的删除</p>
+<h4 id="删除的规则"><a href="#删除的规则" class="headerlink" title="删除的规则"></a>删除的规则</h4><p>而删除的规则和替换差不多，多是的后面带“@”的部分</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">节点.节点.节点@&#x3D;存在的值@删除节点.删除节点.删除节点</span><br></pre></td></tr></table></figure>
+
+<p>“节点.节点.节点@=存在的值”是指某节点的值等于你输入的值时，删除“删除节点.删除节点.删除节点”的内容，其中，“存在的值”可以使用正则。</p>
+<p>在刚才的例子中，当jsonObject中的“f”，中的jsonArray“0”，中的jsonObject“a”，中的jsonObject“pic”，等于任何值时，删除jsonObject中的“f”，中的jsonArray“1”，中的jsonObject“a”。</p>
+<p>如果对此不熟练的话，可以点击网页最下方的“返回主页”，将要测试的json输入“要测试的json：”里，将你使用的规则输入“使用的规则：”里，点击检测即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">如果同时输入多个规则，包含jsonArray的节点必须按照从大到小的顺序输入，不然可能不起作用！！！</span><br><span class="line"></span><br><span class="line">如果同时输入多个规则，包含jsonArray的节点必须按照从大到小的顺序输入，不然可能不起作用！！！</span><br><span class="line"></span><br><span class="line">如果同时输入多个规则，包含jsonArray的节点必须按照从大到小的顺序输入，不然可能不起作用！！！</span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">注：替换和删除两个模式并不冲突，可以同时使用，但请注意执行的先后顺序。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成证书</span></span><br><span class="line"></span><br><span class="line">如果你细心的话，会发现本项目证书的有效期只有两年，因为要是生成太长时间的证书，安卓里的chrome不承认此证书，当然，你也可以使用以下命令自行生成证书</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#key的生成，这样是生成RSA密钥，openssl格式，2048位强度。ca.key是密钥文件名。<br>openssl genrsa -out ca.key 2048</p>
+<p>#key的转换，转换成netty支持私钥编码格式<br>openssl rsa -in ca.key -out ca_private.der -outform der</p>
+<p>#crt的生成，通过-subj选项可以自定义证书的相关信息<br>openssl req -sha256 -new -x509 -days 730 -key ca.key -out ca.crt -subj “/C=CN/ST=GD/L=SZ/O=zerorooot/OU=study/CN=ZeroProxy”</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">还记得之前说的“Android 7以及以上，系统不再信任用户安装的证书”，所以你需要使用</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;bash</span><br><span class="line">cat ca.crt &gt; $(openssl x509 -inform PEM -subject_hash_old -in ca.crt  | head -1).0</span><br></pre></td></tr></table></figure>
+
+<p>命令生成安卓系统所接受的证书，然后把输出的文件移动到<br>/system/etc/security/cacerts/并给与644权限</p>
+<p>当然，对于安卓系统，你也可以安装“move certificates”的magisk模块来解决不信任用户证书的问题</p>
+<h1 id="遇到的问题以及替代方案"><a href="#遇到的问题以及替代方案" class="headerlink" title="遇到的问题以及替代方案"></a>遇到的问题以及替代方案</h1><p>问题：处理时间太长，导致等待的时间太长</p>
+<p>解决：此问题在笔者的树莓派3b+，32位系统中存在（现在已经升级到了64位，到的了很好的解决）。可以尝试使用prioxy中的actionsfile分流。<del>或者换台好点的服务器</del></p>
+<p>问题：太占内存</p>
+<p>解决：确实比较占内存，实测内存大约在150Mb<del>300Mb之间，由于</del>笔者技术所限<del>使用java语言，暂时没有好的解决办法。</del>可以尝试加内存~~</p>
+<p>问题：登不上网页</p>
+<p>解决：确定开启了网页模式，清除网页cookie后再重试（发生于改账号、密码后）</p>
+]]></content>
+      <tags>
+        <tag>ad</tag>
+        <tag>ZeroProxy</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用privoxy去广告</title>
     <url>/2020/10/08/%E4%BD%BF%E7%94%A8privoxy%E5%8E%BB%E5%B9%BF%E5%91%8A/</url>
     <content><![CDATA[<p>用完privoxy翻墙后，感觉只拿来翻墙有点浪费，而且去广告也算是一个毕竟刚需的内容，所以就有了这篇文章</p>
