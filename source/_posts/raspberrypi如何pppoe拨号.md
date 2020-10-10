@@ -1,7 +1,7 @@
 ---
 title: raspberrypi如何pppoe拨号
 tags:
-  - raspberrypi
+  - raspberry pi
   - pppoe
 date: 2020-10-08 20:24:06
 description: sudo apt install pppoe pppoeconf -y && sudo pppoeconf
