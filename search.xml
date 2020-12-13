@@ -31,6 +31,26 @@
       </tags>
   </entry>
   <entry>
+    <title>idea设置新字体</title>
+    <url>/2020/12/13/idea%E8%AE%BE%E7%BD%AE%E6%96%B0%E5%AD%97%E4%BD%93/</url>
+    <content><![CDATA[<p>步骤来自<a href="https://www.jetbrains.com/lp/mono/">官方</a>的mono字体安装教程，不过我们可以用它来安装我们想安的字体</p>
+<h1 id="下载字体并解压"><a href="#下载字体并解压" class="headerlink" title="下载字体并解压"></a>下载字体并解压</h1><h1 id="安装字体"><a href="#安装字体" class="headerlink" title="安装字体"></a>安装字体</h1><h2 id="mac"><a href="#mac" class="headerlink" title="mac"></a>mac</h2><p>选择所有字体，双击“安装字体”按钮</p>
+<h2 id="win"><a href="#win" class="headerlink" title="win"></a>win</h2><p>选择所有字体，左键单击任意一个，然后点击“安装”</p>
+<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><p>复制字体到</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~&#x2F;.local&#x2F;share&#x2F;fonts</span><br></pre></td></tr></table></figure>
+
+<p>然后运行命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure>
+
+<h1 id="重启idea"><a href="#重启idea" class="headerlink" title="重启idea"></a>重启idea</h1><h1 id="设置字体"><a href="#设置字体" class="headerlink" title="设置字体"></a>设置字体</h1><p>进idea里点击“ Preferences/Settings → Editor → Font”，取消勾选“show only monospaced fonts”，选择你安装的字体即可</p>
+]]></content>
+      <tags>
+        <tag>idea</tag>
+        <tag>fonts</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>linux系统如何添加swap分区</title>
     <url>/2020/10/08/linux%E7%B3%BB%E7%BB%9F%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0swap%E5%88%86%E5%8C%BA/</url>
     <content><![CDATA[<p>安装dphys-swap服务 <code>sudo apt-get install dphys-swapfile -y</code> </p>
@@ -42,8 +62,8 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo &#x2F;etc&#x2F;init.d&#x2F;dphys-swapfile restart</span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
-        <tag>swap</tag>
         <tag>linux</tag>
+        <tag>swap</tag>
       </tags>
   </entry>
   <entry>
