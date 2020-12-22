@@ -4,7 +4,7 @@ tags:
   - docker
   - linux
 date: 2020-12-22 23:28:44
-description: 在wine中使用qq，发现它太流氓了。及时退出了程序，还是有几个exe在后台驻守，于是乎想到了使用docker来运行。
+description: 在wine中使用qq，发现它太流氓了。即使退出了程序，还是有几个exe在后台驻守，于是乎想到了使用docker来运行。
 ---
 
 本文通过manjaro来演示此过程
