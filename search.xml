@@ -31,6 +31,40 @@
       </tags>
   </entry>
   <entry>
+    <title>docker运行qq</title>
+    <url>/2020/12/22/docker%E8%BF%90%E8%A1%8Cqq/</url>
+    <content><![CDATA[<p>本文通过manjaro来演示此过程</p>
+<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -S docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置镜像文件"><a href="#配置镜像文件" class="headerlink" title="配置镜像文件"></a>配置镜像文件</h1><p>通过配置镜像文件来加速下载docker镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir &#x2F;etc&#x2F;docker</span><br><span class="line">sudo vim  &#x2F;etc&#x2F;docker&#x2F;daemon.json</span><br></pre></td></tr></table></figure>
+
+<p>输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;jarp5cr2.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动docker并安装QQ"><a href="#启动docker并安装QQ" class="headerlink" title="启动docker并安装QQ"></a>启动docker并安装QQ</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">docker pull bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
+
+<h1 id="首次启动时的配置"><a href="#首次启动时的配置" class="headerlink" title="首次启动时的配置"></a>首次启动时的配置</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d --name qq --device /dev/snd  -v /tmp/.X11-unix:/tmp/.X11-unix  -v <span class="variable">$HOME</span>/TencentFiles:/TencentFiles -e DISPLAY=unix<span class="variable">$DISPLAY</span>   -e XMODIFIERS=@im=fcitx  -e QT_IM_MODULE=fcitx   -e GTK_IM_MODULE=fcitx  -e AUDIO_GID=`getent group audio | cut -d: -f3` -e VIDEO_GID=`getent group video | cut -d: -f3`   -e GID=`id -g`   -e UID=`id -u`   bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
+
+<p>具体各个参数的含义，还请看<a href="https://github.com/bestwu/docker-qq">这里</a></p>
+<p>稍等一会，这时qq就应该启动了，正常登录即可</p>
+<h1 id="停止QQ"><a href="#停止QQ" class="headerlink" title="停止QQ"></a>停止QQ</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stop qq</span><br></pre></td></tr></table></figure>
+
+<h1 id="第二次及其以后登录"><a href="#第二次及其以后登录" class="headerlink" title="第二次及其以后登录"></a>第二次及其以后登录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+
+<p>找到<code>bestwu/qq:light-7.9.14308-2</code>对应的<code>CONTAINER ID</code>，比如我的是 <code>c6978ae2c529</code></p>
+<p>然后运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker start c6978ae2c529</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop qq</span><br><span class="line">docker rm qq</span><br><span class="line">docker rmi bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>docker</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>idea设置新字体</title>
     <url>/2020/12/13/idea%E8%AE%BE%E7%BD%AE%E6%96%B0%E5%AD%97%E4%BD%93/</url>
     <content><![CDATA[<p>步骤来自<a href="https://www.jetbrains.com/lp/mono/">官方</a>的mono字体安装教程，不过我们可以用它来安装我们想安的字体</p>
@@ -45,9 +79,9 @@
 <h1 id="重启idea"><a href="#重启idea" class="headerlink" title="重启idea"></a>重启idea</h1><h1 id="设置字体"><a href="#设置字体" class="headerlink" title="设置字体"></a>设置字体</h1><p>进idea里点击“ Preferences/Settings → Editor → Font”，取消勾选“show only monospaced fonts”，选择你安装的字体即可</p>
 ]]></content>
       <tags>
+        <tag>linux</tag>
         <tag>idea</tag>
         <tag>fonts</tag>
-        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
