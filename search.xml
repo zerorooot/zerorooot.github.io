@@ -42,6 +42,8 @@
 <p>输入</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;jarp5cr2.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h1 id="配置免sudo"><a href="#配置免sudo" class="headerlink" title="配置免sudo"></a>配置免sudo</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo gpasswd -a <span class="variable">$&#123;USER&#125;</span> docker</span><br></pre></td></tr></table></figure>
+
 <h1 id="启动docker并安装QQ"><a href="#启动docker并安装QQ" class="headerlink" title="启动docker并安装QQ"></a>启动docker并安装QQ</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">docker pull bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
 
 <h1 id="首次启动时的配置"><a href="#首次启动时的配置" class="headerlink" title="首次启动时的配置"></a>首次启动时的配置</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d --name qq --device /dev/snd  -v /tmp/.X11-unix:/tmp/.X11-unix  -v <span class="variable">$HOME</span>/TencentFiles:/TencentFiles -e DISPLAY=unix<span class="variable">$DISPLAY</span>   -e XMODIFIERS=@im=fcitx  -e QT_IM_MODULE=fcitx   -e GTK_IM_MODULE=fcitx  -e AUDIO_GID=`getent group audio | cut -d: -f3` -e VIDEO_GID=`getent group video | cut -d: -f3`   -e GID=`id -g`   -e UID=`id -u`   bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
