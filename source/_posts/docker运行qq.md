@@ -32,6 +32,11 @@ sudo vim  /etc/docker/daemon.json
 }
 ```
 
+# 配置免sudo
+```bash
+sudo gpasswd -a ${USER} docker
+```
+
 # 启动docker并安装QQ
 
 ```bash
