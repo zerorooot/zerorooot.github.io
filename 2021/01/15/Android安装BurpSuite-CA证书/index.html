@@ -23,16 +23,22 @@
     var CONFIG = {"hostname":"zerorooot.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="zerorooot的小屋">
-<meta property="og:url" content="https://zerorooot.github.io/tags/linux/index.html">
+  <meta name="description" content="openssl x509 -inform der -in mycert.der -out mycert.cer">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android安装BurpSuite CA证书">
+<meta property="og:url" content="https://zerorooot.github.io/2021/01/15/Android%E5%AE%89%E8%A3%85BurpSuite-CA%E8%AF%81%E4%B9%A6/index.html">
 <meta property="og:site_name" content="zerorooot的小屋">
+<meta property="og:description" content="openssl x509 -inform der -in mycert.der -out mycert.cer">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-15T02:42:42.000Z">
+<meta property="article:modified_time" content="2021-01-15T03:07:21.061Z">
 <meta property="article:author" content="zerorooot">
+<meta property="article:tag" content="BurpSuite">
+<meta property="article:tag" content="Android">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://zerorooot.github.io/tags/linux/">
+<link rel="canonical" href="https://zerorooot.github.io/2021/01/15/Android%E5%AE%89%E8%A3%85BurpSuite-CA%E8%AF%81%E4%B9%A6/">
 
 
 <script class="page-configurations">
@@ -40,12 +46,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: linux | zerorooot的小屋</title>
+  <title>Android安装BurpSuite CA证书 | zerorooot的小屋</title>
   
 
 
@@ -183,7 +189,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -195,6 +201,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96BurpSuite-CA%E8%AF%81%E4%B9%A6"><span class="nav-number">1.</span> <span class="nav-text">获取BurpSuite CA证书</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="nav-number">1.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E8%AF%81%E4%B9%A6%E8%BD%AC%E6%88%90Android%E6%89%80%E8%83%BD%E8%AF%86%E5%88%AB%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">将证书转成Android所能识别的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5Android"><span class="nav-number">3.</span> <span class="nav-text">导入Android</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80-1"><span class="nav-number">3.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C-1"><span class="nav-number">3.2.</span> <span class="nav-text">方法二</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A6"><span class="nav-number">3.2.1.</span> <span class="nav-text">安装证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85move-certificates"><span class="nav-number">3.2.2.</span> <span class="nav-text">安装move certificates</span></a></li></ol></li></ol></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -253,157 +260,123 @@
 </noscript>
 
 
-    <div class="main-inner tag posts-collapse">
+    <div class="main-inner post posts-expand">
       
 
       
 
   
+
+
+<div class="post-block">
   
   
-  <div class="post-block">
-    <div class="post-content">
-      <div class="collection-title">
-        <h2 class="collection-header">linux
-          <small>标签</small>
-        </h2>
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://zerorooot.github.io/2021/01/15/Android%E5%AE%89%E8%A3%85BurpSuite-CA%E8%AF%81%E4%B9%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="zerorooot">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zerorooot的小屋">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Android安装BurpSuite CA证书
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-01-15 10:42:42 / 修改时间：11:07:21" itemprop="dateCreated datePublished" datetime="2021-01-15T10:42:42+08:00">2021-01-15</time>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
       </div>
+      <div class="post-meta">
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>565</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>1 分钟</span>
+    </span>
+</div>
 
-      
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
+            <div class="post-description">openssl x509 -inform der -in mycert.der -out mycert.cer</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="获取BurpSuite-CA证书"><a href="#获取BurpSuite-CA证书" class="headerlink" title="获取BurpSuite CA证书"></a>获取BurpSuite CA证书</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>让浏览器开了127.0.0.1:8080代理，通过浏览器访问  <a target="_blank" rel="noopener" href="http://burp/">http://burp</a> </p>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>打开BurpSuite，点击</p>
+<p>proxy-&gt;options-&gt;import/export CA certificate-&gt;Certificate in DER format</p>
+<p>选择导出的文件夹和文件名，点next 即可</p>
+<h1 id="将证书转成Android所能识别的"><a href="#将证书转成Android所能识别的" class="headerlink" title="将证书转成Android所能识别的"></a>将证书转成Android所能识别的</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform der -<span class="keyword">in</span> cacert.der -out ca.crt</span><br><span class="line">cat ca.crt &gt; $(openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> ca.crt  | head -1).0</span><br></pre></td></tr></table></figure>
+
+<p>这时候会输出一个xxxx.0的文件，这个文件就是我们所需要的，我这里是9a5ba575.0</p>
+<p>注：请把cacert.der改成你导出ca证书的文件名</p>
+<h1 id="导入Android"><a href="#导入Android" class="headerlink" title="导入Android"></a>导入Android</h1><h2 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h2><p>把输出的文件”xxxxx.0”移动到 /system/etc/security/cacerts/并给与644权限</p>
+<h2 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h2><h3 id="安装证书"><a href="#安装证书" class="headerlink" title="安装证书"></a>安装证书</h3><p>在手机上，打开设置-&gt;安全和锁屏-&gt;凭据存储-&gt;从存储设备中安装</p>
+<p>安装上文生成的”ca.crt”证书</p>
+<h3 id="安装move-certificates"><a href="#安装move-certificates" class="headerlink" title="安装move certificates"></a>安装move certificates</h3><p>在magisk中，搜索”move certificates”并安装，重启即可</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2021-01-02T21:41:18+08:00"
-              content="2021-01-02">
-          01-02
-        </time>
-      </div>
+    
+    
+    
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/01/02/%E5%9B%A0%E4%B8%BA-accessExternalDTD-%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE%E7%9A%84%E9%99%90%E5%88%B6%E5%AF%BC%E8%87%B4%E4%B8%8D%E5%85%81%E8%AE%B8-http-%E8%AE%BF%E9%97%AE/" itemprop="url">
-            <span itemprop="name">因为 accessExternalDTD 属性设置的限制导致不允许 'http' 访问</span>
-          </a>
-      </div>
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/BurpSuite/" rel="tag"># BurpSuite</a>
+              <a href="/tags/Android/" rel="tag"># Android</a>
+          </div>
 
-      
-    </header>
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2021/01/02/%E5%9B%A0%E4%B8%BA-accessExternalDTD-%E5%B1%9E%E6%80%A7%E8%AE%BE%E7%BD%AE%E7%9A%84%E9%99%90%E5%88%B6%E5%AF%BC%E8%87%B4%E4%B8%8D%E5%85%81%E8%AE%B8-http-%E8%AE%BF%E9%97%AE/" rel="prev" title="因为 accessExternalDTD 属性设置的限制导致不允许 'http' 访问">
+                  <i class="fa fa-chevron-left"></i> 因为 accessExternalDTD 属性设置的限制导致不允许 'http' 访问
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
   </article>
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
-    </div>
+</div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-22T23:28:44+08:00"
-              content="2020-12-22">
-          12-22
-        </time>
-      </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/12/22/docker%E8%BF%90%E8%A1%8Cqq/" itemprop="url">
-            <span itemprop="name">docker运行qq</span>
-          </a>
-      </div>
 
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-12-13T22:18:06+08:00"
-              content="2020-12-13">
-          12-13
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/12/13/idea%E8%AE%BE%E7%BD%AE%E6%96%B0%E5%AD%97%E4%BD%93/" itemprop="url">
-            <span itemprop="name">idea设置新字体</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-10-08T20:35:43+08:00"
-              content="2020-10-08">
-          10-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/10/08/tomcat9%E4%BD%BF%E7%94%A8root%E6%89%A7%E8%A1%8C%E7%A8%8B%E5%BA%8F/" itemprop="url">
-            <span itemprop="name">tomcat9使用root执行程序</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-10-08T20:34:54+08:00"
-              content="2020-10-08">
-          10-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/10/08/%E5%BC%BA%E5%88%B6apt%E4%BD%BF%E7%94%A8ipv4/" itemprop="url">
-            <span itemprop="name">强制apt使用ipv4</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-      <div class="post-meta-container">
-        <time itemprop="dateCreated"
-              datetime="2020-10-08T20:20:22+08:00"
-              content="2020-10-08">
-          10-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/10/08/linux%E7%B3%BB%E7%BB%9F%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0swap%E5%88%86%E5%8C%BA/" itemprop="url">
-            <span itemprop="name">linux系统如何添加swap分区</span>
-          </a>
-      </div>
-
-      
-    </header>
-  </article>
-
-    </div>
-  </div>
-  
-  
-  
-
-  
 
 
 
