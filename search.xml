@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Android安装BurpSuite CA证书</title>
+    <url>/2021/01/15/android-an-zhuang-burpsuite-ca-zheng-shu/</url>
+    <content><![CDATA[<h1 id="获取BurpSuite-CA证书"><a href="#获取BurpSuite-CA证书" class="headerlink" title="获取BurpSuite CA证书"></a>获取BurpSuite CA证书</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>让浏览器开了127.0.0.1:8080代理，通过浏览器访问  <a href="http://burp/">http://burp</a> </p>
+<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>打开BurpSuite，点击</p>
+<p>proxy-&gt;options-&gt;import/export CA certificate-&gt;Certificate in DER format</p>
+<p>选择导出的文件夹和文件名，点next 即可</p>
+<h1 id="将证书转成Android所能识别的"><a href="#将证书转成Android所能识别的" class="headerlink" title="将证书转成Android所能识别的"></a>将证书转成Android所能识别的</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl x509 -inform der -<span class="keyword">in</span> cacert.der -out ca.crt</span><br><span class="line">cat ca.crt &gt; $(openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> ca.crt  | head -1).0</span><br></pre></td></tr></table></figure>
+
+<p>这时候会输出一个xxxx.0的文件，这个文件就是我们所需要的，我这里是9a5ba575.0</p>
+<p>注：请把cacert.der改成你导出ca证书的文件名</p>
+<h1 id="导入Android"><a href="#导入Android" class="headerlink" title="导入Android"></a>导入Android</h1><h2 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h2><p>把输出的文件”xxxxx.0”移动到 /system/etc/security/cacerts/并给与644权限</p>
+<h2 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h2><h3 id="安装证书"><a href="#安装证书" class="headerlink" title="安装证书"></a>安装证书</h3><p>在手机上，打开设置-&gt;安全和锁屏-&gt;凭据存储-&gt;从存储设备中安装</p>
+<p>安装上文生成的”ca.crt”证书</p>
+<h3 id="安装move-certificates"><a href="#安装move-certificates" class="headerlink" title="安装move certificates"></a>安装move certificates</h3><p>在magisk中，搜索”move certificates”并安装，重启即可</p>
+]]></content>
+      <tags>
+        <tag>BurpSuite</tag>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Debian-Ubuntu-安装-ssr</title>
+    <url>/2020/10/08/debian-ubuntu-an-zhuang-ssr/</url>
+    <content><![CDATA[<h1 id="完整版"><a href="#完整版" class="headerlink" title="完整版"></a>完整版</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev git make libsodium-dev -y</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocksrr/shadowsocksr-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocksr-libev.git</span><br><span class="line">./configure</span><br><span class="line">修改 src/Makefile.in 和 src/Makefile.am 文件，删除中间的 -Werror</span><br><span class="line">make</span><br><span class="line">配置config.json文件</span><br><span class="line">./src/ss-local -c config.json</span><br></pre></td></tr></table></figure>
+
+<h1 id="详细版"><a href="#详细版" class="headerlink" title="详细版"></a>详细版</h1><h2 id="安装编译环境"><a href="#安装编译环境" class="headerlink" title="安装编译环境"></a>安装编译环境</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev git make  -y</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载ssr-amp-配置"><a href="#下载ssr-amp-配置" class="headerlink" title="下载ssr &amp; 配置"></a>下载ssr &amp; 配置</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocksrr/shadowsocksr-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocksr-libev.git</span><br><span class="line">./configure</span><br></pre></td></tr></table></figure>
+
+<p>(虽然写着是ss，但实际用起来是ssr)</p>
+<p>如果这时直接make的话，会报错</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">acl.c:74:90: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 50 and 176 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;ip6tables -N %s; ip6tables -F %s; ip6tables -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">                                                                                          ^~</span><br><span class="line">acl.c:158:68:</span><br><span class="line">         sprintf(cli, ip6tables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                    ~~~~~~~~~~</span><br><span class="line">acl.c:158:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 81 and 270 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, ip6tables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:67:87: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 53 and 179 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;iptables -N %s; iptables -F %s; iptables -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">                                                                                       ^~</span><br><span class="line">acl.c:160:67:</span><br><span class="line">         sprintf(cli, iptables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                   ~~~~~~~~~~</span><br><span class="line">acl.c:160:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 78 and 267 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, iptables_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:92:5: error: <span class="string">&#x27;;      firewall-cmd --direct...&#x27;</span> directive writing 88 bytes into a region of size between 33 and 159 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --add-chain ipv6 filter %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv6 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv6 -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:153:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 186 and 375 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld6_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:81:5: error: <span class="string">&#x27;;      firewall-cmd --direct...&#x27;</span> directive writing 88 bytes into a region of size between 33 and 159 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --add-chain ipv4 filter %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv4 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv4 -A OUTPUT -p tcp --tcp-flags RST RST -j %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:155:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 186 and 375 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld_init_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c: In <span class="keyword">function</span> <span class="string">&#x27;free_block_list&#x27;</span>:</span><br><span class="line">acl.c:96:5: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 61 and 124 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --passthrough ipv6 -D OUTPUT -p tcp --tcp-flags RST RST -j %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv6 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --remove-chain ipv6 filter %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:184:59:</span><br><span class="line">         sprintf(cli, firewalld6_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                           ~~~~~~~~~~</span><br><span class="line">acl.c:184:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 189 and 378 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld6_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:85:5: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 61 and 124 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;firewall-cmd --direct --passthrough ipv4 -D OUTPUT -p tcp --tcp-flags RST RST -j %s; \</span></span><br><span class="line"><span class="string">     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --passthrough ipv4 -F %s; \</span></span><br><span class="line"><span class="string">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span></span><br><span class="line"><span class="string">      firewall-cmd --direct --remove-chain ipv4 filter %s&quot;</span>;</span><br><span class="line">      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:186:58:</span><br><span class="line">         sprintf(cli, firewalld_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                          ~~~~~~~~~~</span><br><span class="line">acl.c:186:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 189 and 378 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, firewalld_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:76:90: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 50 and 176 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;ip6tables -D OUTPUT -p tcp --tcp-flags RST RST -j %s; ip6tables -F %s; ip6tables -X %s&quot;</span>;</span><br><span class="line">                                                                                          ^~</span><br><span class="line">acl.c:179:70:</span><br><span class="line">         sprintf(cli, ip6tables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                      ~~~~~~~~~~</span><br><span class="line">acl.c:179:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 81 and 270 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, ip6tables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">acl.c:69:87: error: <span class="string">&#x27;%s&#x27;</span> directive writing up to 63 bytes into a region of size between 53 and 179 [-Werror=format-overflow=]</span><br><span class="line">     <span class="string">&quot;iptables -D OUTPUT -p tcp --tcp-flags RST RST -j %s; iptables -F %s; iptables -X %s&quot;</span>;</span><br><span class="line">                                                                                       ^~</span><br><span class="line">acl.c:181:69:</span><br><span class="line">         sprintf(cli, iptables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">                                                                     ~~~~~~~~~~</span><br><span class="line">acl.c:181:9: note: <span class="string">&#x27;sprintf&#x27;</span> output between 78 and 267 bytes into a destination of size 256</span><br><span class="line">         sprintf(cli, iptables_remove_chain, chain_name, chain_name, chain_name);</span><br><span class="line">         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><br><span class="line">cc1: all warnings being treated as errors</span><br><span class="line">make[2]: *** [Makefile:778: libshadowsocks_libev_la-acl.lo] Error 1</span><br><span class="line">make[2]: Leaving directory <span class="string">&#x27;/home/ubuntu/application/shadowsocksr-libev/src&#x27;</span></span><br><span class="line">make[1]: *** [Makefile:478: all-recursive] Error 1</span><br><span class="line">make[1]: Leaving directory <span class="string">&#x27;/home/ubuntu/application/shadowsocksr-libev&#x27;</span></span><br><span class="line">make: *** [Makefile:387: all] Error 2</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h2><p>所以，<a href="https://github.com/shadowsocksrr/shadowsocksr-libev/issues/40#issuecomment-413930246">需要修改</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">修改 src/Makefile.in 和 src/Makefile.am 文件，删除中间的 -Werror</span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置config-json文件"><a href="#配置config-json文件" class="headerlink" title="配置config.json文件"></a>配置config.json文件</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;server&quot;</span>: <span class="string">&quot;1.1.1.1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;server_ipv6&quot;</span>: <span class="string">&quot;::&quot;</span>,</span><br><span class="line">    <span class="string">&quot;server_port&quot;</span>: 7324,</span><br><span class="line">    <span class="string">&quot;local_address&quot;</span>: <span class="string">&quot;127.0.0.1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;local_port&quot;</span>: 1080,</span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;password&quot;</span>: <span class="string">&quot;abcdefg&quot;</span>,</span><br><span class="line">    <span class="string">&quot;method&quot;</span>: <span class="string">&quot;none&quot;</span>,</span><br><span class="line">    <span class="string">&quot;protocol&quot;</span>: <span class="string">&quot;auth_chain_a&quot;</span>,</span><br><span class="line">    <span class="string">&quot;protocol_param&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;obfs&quot;</span>: <span class="string">&quot;tls1.2_ticket_auth&quot;</span>,</span><br><span class="line">    <span class="string">&quot;obfs_param&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;speed_limit_per_con&quot;</span>: 0,</span><br><span class="line">    <span class="string">&quot;speed_limit_per_user&quot;</span>: 0,</span><br><span class="line"></span><br><span class="line">    <span class="string">&quot;additional_ports&quot;</span> : &#123;&#125;,</span><br><span class="line">    <span class="string">&quot;additional_ports_only&quot;</span> : <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&quot;timeout&quot;</span>: 120,</span><br><span class="line">    <span class="string">&quot;udp_timeout&quot;</span>: 60,</span><br><span class="line">    <span class="string">&quot;dns_ipv6&quot;</span>: <span class="literal">false</span>,</span><br><span class="line">    <span class="string">&quot;connect_verbose_info&quot;</span>: 0,</span><br><span class="line">    <span class="string">&quot;redirect&quot;</span>: <span class="string">&quot;&quot;</span>,</span><br><span class="line">    <span class="string">&quot;fast_open&quot;</span>: <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>把server改成你ssr的ip，server_port改成你ssr的端口，password改成你ssr的密码，method，protocol，obfs 分别安装机场给你的填</p>
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;src&#x2F;ss-local -c config.json</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>Debian</tag>
+        <tag>Ubuntu</tag>
+        <tag>ssr</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>docker运行qq</title>
+    <url>/2020/12/22/docker-yun-xing-qq/</url>
+    <content><![CDATA[<p>本文通过manjaro来演示此过程</p>
+<h1 id="安装docker"><a href="#安装docker" class="headerlink" title="安装docker"></a>安装docker</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -S docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置镜像文件"><a href="#配置镜像文件" class="headerlink" title="配置镜像文件"></a>配置镜像文件</h1><p>通过配置镜像文件来加速下载docker镜像</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo mkdir &#x2F;etc&#x2F;docker</span><br><span class="line">sudo vim  &#x2F;etc&#x2F;docker&#x2F;daemon.json</span><br></pre></td></tr></table></figure>
+
+<p>输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;registry-mirrors&quot;: [&quot;https:&#x2F;&#x2F;jarp5cr2.mirror.aliyuncs.com&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置免sudo"><a href="#配置免sudo" class="headerlink" title="配置免sudo"></a>配置免sudo</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo gpasswd -a <span class="variable">$&#123;USER&#125;</span> docker</span><br></pre></td></tr></table></figure>
+
+<h1 id="启动docker并安装QQ"><a href="#启动docker并安装QQ" class="headerlink" title="启动docker并安装QQ"></a>启动docker并安装QQ</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line">docker pull bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
+
+<h1 id="首次启动时的配置"><a href="#首次启动时的配置" class="headerlink" title="首次启动时的配置"></a>首次启动时的配置</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d --name qq --device /dev/snd  -v /tmp/.X11-unix:/tmp/.X11-unix  -v <span class="variable">$HOME</span>/TencentFiles:/TencentFiles -e DISPLAY=unix<span class="variable">$DISPLAY</span>   -e XMODIFIERS=@im=fcitx  -e QT_IM_MODULE=fcitx   -e GTK_IM_MODULE=fcitx  -e AUDIO_GID=`getent group audio | cut -d: -f3` -e VIDEO_GID=`getent group video | cut -d: -f3`   -e GID=`id -g`   -e UID=`id -u`   bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
+
+<p>具体各个参数的含义，还请看<a href="https://github.com/bestwu/docker-qq">这里</a></p>
+<p>稍等一会，这时qq就应该启动了，正常登录即可</p>
+<h1 id="停止QQ"><a href="#停止QQ" class="headerlink" title="停止QQ"></a>停止QQ</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker stop qq</span><br></pre></td></tr></table></figure>
+
+<h1 id="第二次及其以后登录"><a href="#第二次及其以后登录" class="headerlink" title="第二次及其以后登录"></a>第二次及其以后登录</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+
+<p>找到<code>bestwu/qq:light-7.9.14308-2</code>对应的<code>CONTAINER ID</code>，比如我的是 <code>c6978ae2c529</code></p>
+<p>然后运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker start c6978ae2c529</span><br></pre></td></tr></table></figure>
+
+<h1 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop qq</span><br><span class="line">docker rm qq</span><br><span class="line">docker rmi bestwu/qq:light-7.9.14308-2</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>docker</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>idea设置新字体</title>
+    <url>/2020/12/13/idea-she-zhi-xin-zi-ti/</url>
+    <content><![CDATA[<p>步骤来自<a href="https://www.jetbrains.com/lp/mono/">官方</a>的mono字体安装教程，不过我们可以用它来安装我们想安的字体</p>
+<h1 id="下载字体并解压"><a href="#下载字体并解压" class="headerlink" title="下载字体并解压"></a>下载字体并解压</h1><h1 id="安装字体"><a href="#安装字体" class="headerlink" title="安装字体"></a>安装字体</h1><h2 id="mac"><a href="#mac" class="headerlink" title="mac"></a>mac</h2><p>选择所有字体，双击“安装字体”按钮</p>
+<h2 id="win"><a href="#win" class="headerlink" title="win"></a>win</h2><p>选择所有字体，左键单击任意一个，然后点击“安装”</p>
+<h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><p>复制字体到</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">~&#x2F;.local&#x2F;share&#x2F;fonts</span><br></pre></td></tr></table></figure>
+
+<p>然后运行命令</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">fc-cache -f -v</span><br></pre></td></tr></table></figure>
+
+<h1 id="重启idea"><a href="#重启idea" class="headerlink" title="重启idea"></a>重启idea</h1><h1 id="设置字体"><a href="#设置字体" class="headerlink" title="设置字体"></a>设置字体</h1><p>进idea里点击“ Preferences/Settings → Editor → Font”，取消勾选“show only monospaced fonts”，选择你安装的字体即可</p>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>idea</tag>
+        <tag>fonts</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>ijkplayer编译</title>
+    <url>/2021/02/11/ijkplayer-bian-yi/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Q:为什么要自己编译ijkplayer?</span><br><span class="line">A:因为别人编译的，对于自己来说，可能部分格式不支持</span><br></pre></td></tr></table></figure>
+
+<h1 id="下载以及配置NDK"><a href="#下载以及配置NDK" class="headerlink" title="下载以及配置NDK"></a>下载以及配置NDK</h1><p>去<a href="https://developer.android.com/ndk/downloads/older_releases">Android NDK官网</a>，下载**<code>android-ndk-r13b</code>**的版本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">unzip android-ndk-r13b-linux-x86_64.zip</span><br><span class="line">vim ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>输入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> ANDROID_NDK=/home/ubuntu/Android/android-ndk-r13b</span><br></pre></td></tr></table></figure>
+
+<p>把**/home/ubuntu/Android/**替换成你ndk的实际目录</p>
+<p>别忘了刷新bashrc</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+
+<p>ndk就配置好了</p>
+<h1 id="下载、配置并编译ijkplayer"><a href="#下载、配置并编译ijkplayer" class="headerlink" title="下载、配置并编译ijkplayer"></a>下载、配置并编译ijkplayer</h1><h2 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/bilibili/ijkplayer.git</span><br><span class="line"><span class="built_in">cd</span> ijkplayer</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置ijkplayer"><a href="#配置ijkplayer" class="headerlink" title="配置ijkplayer"></a>配置ijkplayer</h2><p>这步就是关键了，通过不同的配置来让我们编译的ijkplayer支持不同格式的视频播放</p>
+<h3 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h3><blockquote>
+<p>视频文件有不同的格式，用不同的后缀表示：avi，rmvb，mp4，flv，mkv等等（当然也使用不同的图标）。在这里需要注意的是，这些格式代表的是<strong>封装格式</strong>。何为封装格式？就是把视频数据和音频数据打包成一个文件的规范。仅仅靠看文件的后缀，很难能看出具体使用了什么<strong>视音频编码标准</strong>。总的来说，不同的封装格式之间差距不大，各有优劣。相关内容可以看<a href="https://blog.csdn.net/leixiaohua1020/article/details/18893769">这篇博客</a>，讲的很详细</p>
+</blockquote>
+<p>主要封装格式一览</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>推出机构</th>
+<th>流媒体</th>
+<th>支持的视频编码</th>
+<th>支持的音频编码</th>
+<th>目前使用领域</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AVI</td>
+<td>Microsoft Inc.</td>
+<td>不支持</td>
+<td>几乎所有格式</td>
+<td>几乎所有格式</td>
+<td>BT下载影视</td>
+</tr>
+<tr>
+<td>MP4</td>
+<td>MPEG</td>
+<td>支持</td>
+<td>MPEG-2, MPEG-4, H.264, H.263等</td>
+<td>AAC, MPEG-1 Layers I, II, III, AC-3等</td>
+<td>互联网视频网站</td>
+</tr>
+<tr>
+<td>TS</td>
+<td>MPEG</td>
+<td>支持</td>
+<td>MPEG-1, MPEG-2, MPEG-4, H.264</td>
+<td>MPEG-1 Layers I, II, III, AAC,</td>
+<td>IPTV，数字电视</td>
+</tr>
+<tr>
+<td>FLV</td>
+<td>Adobe Inc.</td>
+<td>支持</td>
+<td>Sorenson, VP6, H.264</td>
+<td>MP3, ADPCM, Linear PCM, AAC等</td>
+<td>互联网视频网站</td>
+</tr>
+<tr>
+<td>MKV</td>
+<td>CoreCodec Inc.</td>
+<td>支持</td>
+<td>几乎所有格式</td>
+<td>几乎所有格式</td>
+<td>互联网视频网站</td>
+</tr>
+<tr>
+<td>RMVB</td>
+<td>Real Networks Inc.</td>
+<td>支持</td>
+<td>RealVideo 8, 9, 10</td>
+<td>AAC, Cook Codec, RealAudio Lossless</td>
+<td>BT下载影视</td>
+</tr>
+</tbody></table>
+<p>因此，如果想要播放mkv格式，有两种方法，一种是查看当前视频的音频编码，让我们自己编译的ijkplayer支持此音频编码。另一种就是让我们的ijkplayer支持所有的音频、视频编码。前者占用的空间更小，但还是不支持部分视频；后者占用的空间大，但支持全部的视频、音频编码。这两种方法我们都来试一试</p>
+<h3 id="第一种"><a href="#第一种" class="headerlink" title="第一种"></a>第一种</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget <span class="string">&quot;https://github.com/CarGuo/GSYVideoPlayer/raw/master/module-lite.sh&quot;</span> -o config/module.sh</span><br></pre></td></tr></table></figure>
+
+<p>使用相关的软件查看当前视频的音频编码，ffmpeg所支持的格式可以在这里找到，按照我们下载的module.sh，照葫芦画瓢即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./extra/ffmpeg/configure -h</span><br><span class="line">  --list-decoders          show all available decoders</span><br><span class="line">  --list-encoders          show all available encoders</span><br><span class="line">  --list-hwaccels          show all available hardware accelerators</span><br><span class="line">  --list-demuxers          show all available demuxers</span><br><span class="line">  --list-muxers            show all available muxers</span><br><span class="line">  --list-parsers           show all available parsers</span><br><span class="line">  --list-protocols         show all available protocols</span><br><span class="line">  --list-bsfs              show all available bitstream filters</span><br><span class="line">  --list-indevs            show all available input devices</span><br><span class="line">  --list-outdevs           show all available output devices</span><br><span class="line">  --list-filters           show all available filters</span><br></pre></td></tr></table></figure>
+
+<h3 id="第二种"><a href="#第二种" class="headerlink" title="第二种"></a>第二种</h3><p>复制以下内容，到<strong>config/module.sh</strong>里</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#! /usr/bin/env bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#--------------------</span></span><br><span class="line"><span class="comment"># Standard options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=</span><br><span class="line"></span><br><span class="line"><span class="comment"># Licensing options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-gpl&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-nonfree&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Configuration options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-runtime-cpudetect&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-gray&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-swscale-alpha&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Program options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-programs&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-ffmpeg&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-ffplay&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-ffprobe&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Documentation options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-doc&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-htmlpages&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-manpages&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-podpages&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-txtpages&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Component options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-avdevice&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-avcodec&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-avformat&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-avutil&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-swresample&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-swscale&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-postproc&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-avfilter&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-avresample&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-network&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Hardware accelerators:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-d3d11va&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-dxva2&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-vaapi&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-vdpau&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-videotoolbox&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Individual component options:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-encoders&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./configure --list-decoders</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-decoders&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-hwaccels&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./configure --list-muxers</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-muxers&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./configure --list-demuxers</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-demuxers&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./configure --list-parsers</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-parsers&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./configure --list-bsf</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-bsfs&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ./configure --list-protocols</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-protocols&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --enable-protocol=async&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-devices&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-filters&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># External library support:</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-iconv&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-audiotoolbox&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-videotoolbox&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-linux-perf&quot;</span></span><br><span class="line"><span class="built_in">export</span> COMMON_FF_CFG_FLAGS=<span class="string">&quot;<span class="variable">$COMMON_FF_CFG_FLAGS</span> --disable-bzlib&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>文件配置好了，终于可以开始编译了</p>
+<h3 id="初始化openSSL和FFMPEG"><a href="#初始化openSSL和FFMPEG" class="headerlink" title="初始化openSSL和FFMPEG"></a>初始化openSSL和FFMPEG</h3><p>这里会同步下载对应的代码，所以可能会比较耗时</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;init-android-openssl.sh</span><br><span class="line">.&#x2F;init-android.sh</span><br></pre></td></tr></table></figure>
+
+<h3 id="编译-1"><a href="#编译-1" class="headerlink" title="编译"></a>编译</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> android/contrib</span><br><span class="line">./compile-openssl.sh clean</span><br><span class="line">./compile-ffmpeg.sh clean</span><br><span class="line">./compile-openssl.sh all</span><br><span class="line">./compile-ffmpeg.sh all</span><br></pre></td></tr></table></figure>
+
+<p>如果觉得编译所有版本太耗时间，可以使用下面这个命令来代替</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./compile-ffmpeg.sh  armv5|armv7a|arm64|x86|x86_64</span><br></pre></td></tr></table></figure>
+
+<p>更多命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">./compile-ffmpeg.sh -h</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  compile-ffmpeg.sh armv5|armv7a|arm64|x86|x86_64</span><br><span class="line">  compile-ffmpeg.sh all|all32</span><br><span class="line">  compile-ffmpeg.sh all64</span><br><span class="line">  compile-ffmpeg.sh clean</span><br><span class="line">  compile-ffmpeg.sh check</span><br></pre></td></tr></table></figure>
+
+<h3 id="生成对应的so"><a href="#生成对应的so" class="headerlink" title="生成对应的so"></a>生成对应的so</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">./compile-ijk.sh all</span><br></pre></td></tr></table></figure>
+
+<p>会在当前位置的ijkplayer目录下生成我们所想要的包，把so复制到你项目的app/libs/下，然后在app/build.gradle中输入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">&#x27;xxxxxxx&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">android &#123;</span><br><span class="line">   //xxxxxxxxx</span><br><span class="line">    sourceSets &#123;</span><br><span class="line">        main &#123;</span><br><span class="line">            jniLibs.srcDirs = [<span class="string">&#x27;libs&#x27;</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  //xxxxxxx</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">dependencies &#123;xxxxx&#125;</span><br></pre></td></tr></table></figure>
+
+<p>来启用自己编译so文件</p>
+]]></content>
+      <tags>
+        <tag>ijkplayer</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux系统如何添加swap分区</title>
+    <url>/2020/10/08/linux-xi-tong-ru-he-tian-jia-swap-fen-qu/</url>
+    <content><![CDATA[<p>安装dphys-swap服务 <code>sudo apt-get install dphys-swapfile -y</code> </p>
+<p>编辑/etc/dphys-swapfile</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo vim &#x2F;etc&#x2F;dphys-swapfile</span><br></pre></td></tr></table></figure>
+
+<p>将 CONF_SWAPSIZE 的值修改成你想要的大小。 一般在内存小于2G的情况下，交换分区应为内存的2倍!(树莓派的话是2G最好)</p>
+<p>然后，重新启动 dphys-swapfile 文件服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo &#x2F;etc&#x2F;init.d&#x2F;dphys-swapfile restart</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>swap</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>raspberrypi如何pppoe拨号</title>
+    <url>/2020/10/08/raspberrypi-ru-he-pppoe-bo-hao/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install pppoe pppoeconf  -y</span><br><span class="line">sudo pppoeconf</span><br></pre></td></tr></table></figure>
+
+<p>配置文件在</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/ppp/pap-secrets</span><br></pre></td></tr></table></figure>
+
+<p>您可以通过</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo pon dsl-provider</span><br></pre></td></tr></table></figure>
+<p>来建立连接和通过</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo poff dsl-provider</span><br></pre></td></tr></table></figure>
+<p> 来中断连接</p>
+]]></content>
+      <tags>
+        <tag>raspberry pi</tag>
+        <tag>pppoe</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>raspberrypi如何开热点</title>
+    <url>/2020/10/08/raspberrypi-ru-he-kai-re-dian/</url>
+    <content><![CDATA[<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;oblique&#x2F;create_ap </span><br><span class="line">cd create_ap </span><br><span class="line">sudo apt install util-linux procps hostapd iproute2 iw haveged dnsmasq iptables make -y</span><br><span class="line">sudo make install </span><br><span class="line">sudo create_ap wlan0 eth0 rasberry 1234567890</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>raspberry pi</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>tomcat9使用root执行程序</title>
+    <url>/2020/10/08/tomcat9-shi-yong-root-zhi-xing-cheng-xu/</url>
+    <content><![CDATA[<h5 id="添加环境"><a href="#添加环境" class="headerlink" title="添加环境"></a>添加环境</h5><p>sudo vim /lib/systemd/system/tomcat9.service</p>
+<p>注释原来的</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">AmbientCapabilities&#x3D;CAP_NET_BIND_SERVICE</span><br><span class="line">NoNewPrivileges&#x3D;true</span><br></pre></td></tr></table></figure>
+
+<p>添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">NoNewPrivileges&#x3D;false</span><br><span class="line">AmbientCapabilities&#x3D;CAP_SETGID CAP_SETUID</span><br><span class="line">SecureBits&#x3D;keep-caps</span><br></pre></td></tr></table></figure>
+
+<h5 id="给tomcat用户设置密码"><a href="#给tomcat用户设置密码" class="headerlink" title="给tomcat用户设置密码"></a>给tomcat用户设置密码</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo passwd tomcat</span><br></pre></td></tr></table></figure>
+
+<h5 id="添加到sudo用户组"><a href="#添加到sudo用户组" class="headerlink" title="添加到sudo用户组"></a>添加到sudo用户组</h5><p>sudo vim /etc/sudoers</p>
+<p>在root    ALL=(ALL:ALL) ALL后，添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tomcat  ALL&#x3D;(ALL:ALL) ALL</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">echo &quot;你设置的tomcat密码&quot; | sudo -S 要执行的命令</span><br></pre></td></tr></table></figure>
+
+<h5 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h5><p><strong>更改tomcat9的UMASK</strong></p>
+<p>/usr/share/tomcat9/bin目录下如果没有setenv.sh,添加此文件,内容如下:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">UMASK&#x3D;0022</span><br></pre></td></tr></table></figure>
+
+<p>使此文件可执行:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo chmod +x setenv.sh</span><br></pre></td></tr></table></figure>
+
+<p>重新启动tomcat9</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart tomcat9</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用Privoxy翻墙</title>
+    <url>/2020/10/08/shi-yong-privoxy-fan-qiang/</url>
+    <content><![CDATA[<p>当我们安装了<a href="https://zerorooot.github.io/2020/10/08/Debian-Ubuntu-%E5%AE%89%E8%A3%85-ssr/">ssr后</a>，直接使用是不行的，因为ssr支持的是SOCKS5，而我们要用的是http代理，所以需要privoxy转换</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install privoxy</span><br></pre></td></tr></table></figure>
+
+
+
+<p>安装失败尝试把</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;lib&#x2F;systemd&#x2F;system&#x2F;privoxy.service</span><br><span class="line">中的</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;privoxy  --pidfile $PIDFILE --user $OWNER $CONFIGFILE</span><br><span class="line">换成</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;sbin&#x2F;privoxy  --no-daemon --pidfile $PIDFILE --user $OWNER $CONFIGFILE</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+
+<p>找到 <code>listen-address</code> 确保有这行代码 <code>listen-address 0.0.0.0:8118</code></p>
+<p>找到 <code>forward-socks5</code> 确保有这行代码并且打开注释(没有自己加)<code> forward-socks5 / 127.0.0.1:1080 .</code></p>
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo service privoxy start</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="配置环境变量，让终端也能走代理"><a href="#配置环境变量，让终端也能走代理" class="headerlink" title="配置环境变量，让终端也能走代理"></a>配置环境变量，让终端也能走代理</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 全局环境变量</span></span><br><span class="line">sudo vim /etc/profile</span><br><span class="line"><span class="comment"># ======================</span></span><br><span class="line"><span class="comment"># 文件末尾处都添加上以下内容</span></span><br><span class="line"><span class="built_in">export</span> http_proxy=<span class="string">&quot;http://127.0.0.1:8118&quot;</span></span><br><span class="line"><span class="built_in">export</span> https_proxy=<span class="string">&quot;https://127.0.0.1:8118&quot;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="验证一下"><a href="#验证一下" class="headerlink" title="验证一下"></a>验证一下</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>发现可以上了，是不是很开心，再来试一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 搜狐的这个接口能够返回你的IP地址</span></span><br><span class="line">curl  -L tool.lu/ip</span><br></pre></td></tr></table></figure>
+
+<p>发现我们目前在终端任何HTTP连接都走了代理了，这不符合我们的预期，我们希望的让代理走pac模式：需要的连接才代理，不需要的就不用代理。</p>
+<p>好了，我们来看看<code>Privoxy</code>如何使用pac模式，首先需要一个符合<code>Privoxy</code>的pac规则的文件，可以使用<a href="https://github.com/zerorooot/PrivoxyGfwWhiteList">PrivoxyGfwWhiteList</a>来生成。</p>
+<p>首先把<code>/etc/privoxy/config</code>中的<code>forward-socks5 / 127.0.0.1:1080 .</code>这一行注释了</p>
+<h3 id="安装-PrivoxyGfwWhiteList"><a href="#安装-PrivoxyGfwWhiteList" class="headerlink" title="安装 PrivoxyGfwWhiteList"></a>安装 PrivoxyGfwWhiteList</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/zerorooot/PrivoxyGfwWhiteList.git</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> PrivoxyGfwWhiteList</span><br><span class="line"></span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;actionsfile whitelist.action&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br><span class="line"></span><br><span class="line">sudo java whiteList.java 127.0.0.1:1080</span><br></pre></td></tr></table></figure>
+
+
+
+<p>如果以后某个pac文件之外的网站也想走代理的话，那么仅需要把域名添加到template.txt文件里面就可以了，</p>
+<h3 id="重启Privoxy，测试代理是否走了pac模式"><a href="#重启Privoxy，测试代理是否走了pac模式" class="headerlink" title="重启Privoxy，测试代理是否走了pac模式"></a>重启Privoxy，测试代理是否走了pac模式</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>OK，没问题，google还是可以访问的；</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl <span class="string">&quot;http://pv.sohu.com/cityjson?ie=utf-8&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个也OK，返回的是我们自己宽带的IP，也没问题。</p>
+<h3 id="过滤本机地址"><a href="#过滤本机地址" class="headerlink" title="过滤本机地址"></a>过滤本机地址</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim /etc/privoxy/config</span><br></pre></td></tr></table></figure>
+
+<p>在最后添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">forward         192.168.*.*&#x2F;     .</span><br><span class="line">forward           127.*.*.*&#x2F;     .</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="再其他设备上翻墙"><a href="#再其他设备上翻墙" class="headerlink" title="再其他设备上翻墙"></a>再其他设备上翻墙</h3><p>在配置好上述步骤后，且确保有这行代码 <code>listen-address 0.0.0.0:8118</code>后，就可以通过代理的方式，使其他设备翻墙</p>
+<p>（要求此设备要和要翻墙的设备处于同一局域网下，即连同一个路由器</p>
+<h4 id="查看本机地址"><a href="#查看本机地址" class="headerlink" title="查看本机地址"></a>查看本机地址</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ifconfig</span><br></pre></td></tr></table></figure>
+
+<p>找到eth0或者wlan0下的 <code>inet</code>，此为你设备的ip地址</p>
+<h4 id="Android系统"><a href="#Android系统" class="headerlink" title="Android系统"></a>Android系统</h4><p>1.点击“设置”，进入WiFi列表，长按要修改代理的WiFi。</p>
+<p>2.弹出菜单中选择“修改网络”，或“连接到网络”。 </p>
+<p>3.弹出窗口底部勾选“高级选项-代理设置：列表中选择手动”。 </p>
+<p>4.服务器主机名填写刚刚看到的ip，服务器端口填写8118，保存后即可。</p>
+<h4 id="ios"><a href="#ios" class="headerlink" title="ios"></a>ios</h4><ol>
+<li>打开<strong>设置</strong> 进入<strong>设置</strong>，选择无线局域网</li>
+<li>进入wifi详细<strong>设置</strong> 找到已连接的wifi，点击最右侧的小图标</li>
+<li>配置<strong>代理</strong> 进入 配置<strong>代理</strong> 界面 选择“手动” 字段 填写方法 服务器 填入 刚刚看到的ip. 端口 8118</li>
+</ol>
+<h4 id="windows"><a href="#windows" class="headerlink" title="windows"></a>windows</h4><ol>
+<li>首先，按下键盘的win键，就是<strong>windows</strong> 图标。 然后再开始菜单中单击“<strong>设置</strong>”。</li>
+<li>然后，再出现的<strong>设置</strong>面板中，单击“网络和Internet”。</li>
+<li>单击“<strong>代理</strong>”。 你就会看到右侧有关<strong>代理</strong>的详细<strong>设置</strong>。</li>
+<li>下面，接下来看下手动代理，地址 填入 刚刚看到的ip. 端口 8118</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>privoxy</tag>
+        <tag>翻墙</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用ProxyChains-NG翻墙</title>
+    <url>/2020/10/08/shi-yong-proxychains-ng-fan-qiang/</url>
+    <content><![CDATA[<p>proxychains通过hook系统相关代码，从而重定向连接到自定义的SOCKS4a/5 或 HTTP代理，从而实现翻墙的功能</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo apt install proxychains4</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h1><p>proxychains-ng默认配置文件名为<code>/etc/proxychains4.conf</code>。</p>
+<ul>
+<li>删除最后一行</li>
+<li>添加 sock5 127.0.0.1 1080</li>
+</ul>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">proxychains4 curl www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>注：此程序只能使<strong>某个</strong>软件翻墙！！！</p>
+]]></content>
+      <tags>
+        <tag>翻墙</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用ZeroProxy去广告</title>
+    <url>/2020/10/08/shi-yong-zeroproxy-qu-guang-gao/</url>
+    <content><![CDATA[<p>之前使用privoxy去广告，文末说了，只能屏蔽http开头的网址，而这次使用ZeroProxy可以屏蔽https类的广告了</p>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="下载-amp-编译"><a href="#下载-amp-编译" class="headerlink" title="下载&amp;编译"></a>下载&amp;编译</h2><p>安装<a href="https://maven.apache.org/download.cgi">maven</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;zerorooot&#x2F;ZeroProxy.git</span><br><span class="line">cd ZeroProxy</span><br><span class="line">mvn assembly:assembly</span><br></pre></td></tr></table></figure>
+
+<p>这样，就在target目录下生成了我们需要的ZeroProxy-1.0-jar-with-dependencies.jar文件。</p>
+<h2 id="安装证书"><a href="#安装证书" class="headerlink" title="安装证书"></a>安装证书</h2><p>下载项目中的src/resources/ca.crt，导入到正确位置。如何导入还请自行搜索</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">注：Android 7以及以上，系统不再信任用户安装的证书，你需要root后，下载src&#x2F;test&#x2F;913718f3.0，然后把文件移动到</span><br><span class="line">&#x2F;system&#x2F;etc&#x2F;security&#x2F;cacerts&#x2F;</span><br><span class="line">并给与644权限</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar target/ZeroProxy-1.0-jar-with-dependencies.jar ip port configFile account password</span><br></pre></td></tr></table></figure>
+
+<h3 id="ip"><a href="#ip" class="headerlink" title="ip"></a>ip</h3><p>指你的ip地址，为了分享给其他设备使用，这里建议使用内网地址，如 192.168.123.164</p>
+<h3 id="port"><a href="#port" class="headerlink" title="port"></a>port</h3><p>指ZeroProxy运行的端口，如 9999</p>
+<h3 id="configFile"><a href="#configFile" class="headerlink" title="configFile"></a>configFile</h3><p>用于存放配置文件的文件夹，要求绝对目录，如 D:\JavaCode\ZeroProxy\src\test</p>
+<h3 id="account-amp-password"><a href="#account-amp-password" class="headerlink" title="account&amp;password"></a>account&amp;password</h3><p>网页端的账号和密码，这两项不是必要的，不填的话，默认关闭网页控制。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">java -jar target\ZeroProxy-1.0-jar-with-dependencies.jar 192.168.123.164 9999 D:\JavaCode\ZeroProxy\src\test admin 123456</span><br></pre></td></tr></table></figure>
+
+<h2 id="设置代理"><a href="#设置代理" class="headerlink" title="设置代理"></a>设置代理</h2><h3 id="window"><a href="#window" class="headerlink" title="window"></a>window</h3><p>设置–》网络和internet–》代理–》手动设置代理–》使用代理服务器其中，地址就是你设置的ip地址，端口就是你设置的端口。在本例子中，地址是192.168.123.164，端口是9999</p>
+<p>或</p>
+<p>在chrome中下载<a href="chrome-extension://padekgcemlokbadohgkifijomclgjgif/options.html#!/about">SwitchyOmega</a>，设置代理协议为http，代理服务器以及代理端口均为你输入的。</p>
+<h3 id="android"><a href="#android" class="headerlink" title="android"></a>android</h3><p>设置–》wlan和互联网–》wlan–》点击你目前使用的wifi–》点击右上角的“✏”–》高级选项–》代理–》手动–》代理服务器主机名为你设置的IP，代理服务器端口为你设置的端口–》保存</p>
+<h3 id="ios"><a href="#ios" class="headerlink" title="ios"></a>ios</h3><p>设置–》无线局域网络–》点击你目前使用的wifi–》最下面，http代理–》手动–》服务器为你设置的IP，端口为你设置的端口–》储存</p>
+<h1 id="注：必须安装好证书，不然没法使用！！！"><a href="#注：必须安装好证书，不然没法使用！！！" class="headerlink" title="注：必须安装好证书，不然没法使用！！！"></a>注：必须安装好证书，不然没法使用！！！</h1><h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>好了，现在程序已经运行起来了，但还不能去广告，因为我们没有配置相关内容</p>
+<p>由于我们开启了网页控制，所以直接进入 <a href="http://ip:port/index.html配置即可。">http://ip:port/index.html配置即可。</a></p>
+<p>如果你没有开启网页界面，请在configFile下的config.txt里进行配置</p>
+<h2 id="处理网址"><a href="#处理网址" class="headerlink" title="处理网址"></a>处理网址</h2><p>对所有的网址都要进行处理，不然无法得到你想要的结果。</p>
+<p>需要删除开头的</p>
+<p><strong>https://</strong></p>
+<p>以及后面的参数（“？”以及“？”后的内容）。</p>
+<h3 id="例"><a href="#例" class="headerlink" title="例"></a>例</h3><p>假设，通过抓包，找到了此网址为广告地址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;123.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除</strong>网址前面的 </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>和网址“?”以及后面的内容</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p>把</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;123.txt</span><br></pre></td></tr></table></figure>
+
+<p>输入到配置文件里</p>
+<h2 id="拦截请求"><a href="#拦截请求" class="headerlink" title="拦截请求"></a>拦截请求</h2><h3 id="普通拦截"><a href="#普通拦截" class="headerlink" title="普通拦截"></a>普通拦截</h3><p>把</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;123.txt</span><br></pre></td></tr></table></figure>
+
+<p>输入到文本框里，并点击更改。</p>
+<p>最终效果是这样的👇</p>
+<p><img src="image-20200725192302167.png" alt="image-20200725192302167"></p>
+<p>然后，再次进入</p>
+<p><a href="https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt?signal=12fsaw34567&amp;time=8765431352">https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt?signal=12fsaw34567&amp;time=8765431352</a></p>
+<p>我们发现，网址被重定向到了127.0.0.1，成功实现了网址拦截</p>
+<h3 id="正则拦截"><a href="#正则拦截" class="headerlink" title="正则拦截"></a>正则拦截</h3><p>但要是每次请求的网址都有变呢？难道要把所有的网址都存下来吗？明显不现实。</p>
+<p>注释“raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt”</p>
+<p>新加一条</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;\d*.txt</span><br></pre></td></tr></table></figure>
+
+<p>输入到文本框里，并点击更改。</p>
+<p>最终效果是这样的👇</p>
+<p><img src="image-20200725193153710.png" alt="image-20200725193153710"></p>
+<p>进入</p>
+<p><a href="https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/345.txt">https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/345.txt</a></p>
+<p>和</p>
+<p><a href="https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt">https://raw.githubusercontent.com/zerorooot/ZeroProxy/master/src/test/ad/123.txt</a></p>
+<p>发现均被拦截。</p>
+<h3 id="检测书写规则是否奏效"><a href="#检测书写规则是否奏效" class="headerlink" title="检测书写规则是否奏效"></a>检测书写规则是否奏效</h3><p>由于正则可能存在转义等一堆问题，难道要没次都傻傻的进入被拦截的网址测试吗？明显太蠢了。</p>
+<p>点击最下方的 “<u>返回主页</u>”</p>
+<p>在最上面，看到要测试的url。输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;345.txt</span><br></pre></td></tr></table></figure>
+
+<p>返回的是true，证明我们书写的正则奏效了。</p>
+<h3 id="注"><a href="#注" class="headerlink" title="注"></a>注</h3><p>拦截请求这么配置就ok了。注意的是，对于某广告网址，需要先删除开头的https://,以及后面的参数（“？”以及“？”后的内容）。</p>
+<h2 id="更改返回的json"><a href="#更改返回的json" class="headerlink" title="更改返回的json"></a>更改返回的json</h2><p>假设，通过抓包，找到了json的返回网址</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;json.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<h3 id="替换模式"><a href="#替换模式" class="headerlink" title="替换模式"></a>替换模式</h3><p>替换模式是指替换json里某个值</p>
+<p>把刚才抓到的包经过处理后，在最前面加上”@”,加入文本框，并点击更改。</p>
+<p>最终效果是这样的👇</p>
+<p><img src="image-20200725201053792.png" alt="image-20200725201053792"></p>
+<p>我们发现，在最上方，<strong>出现了此网站的网址</strong>，点击。</p>
+<p>输入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">f.0.a.pic&#x3D;1</span><br></pre></td></tr></table></figure>
+
+<p>保存，再次进入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;json.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p>我们发现，返回的json变成了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;&quot;f&quot;:[&#123;&quot;a&quot;:&#123;&quot;pic&quot;:1&#125;,&quot;b&quot;:&quot;c&quot;&#125;,&#123;&quot;a&quot;:&#123;&quot;pic&quot;:&quot;a&quot;&#125;,&quot;b&quot;:&quot;c&quot;,&quot;d&quot;:&quot;e&quot;&#125;],&quot;test&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功实现了替换。</p>
+<h4 id="替换的规则"><a href="#替换的规则" class="headerlink" title="替换的规则"></a>替换的规则</h4><p>从刚才的例子可以看出，替换的规则非常的简单，即</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">节点.节点.节点&#x3D;你想要的值</span><br></pre></td></tr></table></figure>
+
+<p>在此例子中，我们把jsonObject中的“f”，中的jsonArray“0”，中的jsonObject“a”，中的jsonObject“pic”，从123改成了1</p>
+<p>如果对此不熟练的话，可以点击网页最下方的“返回主页”，将要测试的json输入“要测试的json：”里，将你使用的规则输入“使用的规则：”里，点击检测即可</p>
+<h3 id="删除模式"><a href="#删除模式" class="headerlink" title="删除模式"></a>删除模式</h3><p>删除模式是指，当某节点的值等于你输入的值时，删除某节点</p>
+<p>添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">f.0.a.pic@&#x3D;.*@f.1.a</span><br></pre></td></tr></table></figure>
+
+<p>保存，最终效果是这样的👇</p>
+<p><img src="image-20200725210235848.png" alt="image-20200725210235848"></p>
+<p>进入再次进入</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;zerorooot&#x2F;ZeroProxy&#x2F;master&#x2F;src&#x2F;test&#x2F;ad&#x2F;json.txt?signal&#x3D;12fsaw34567&amp;time&#x3D;8765431352</span><br></pre></td></tr></table></figure>
+
+<p>我们发现，返回的json变成了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#123;&quot;f&quot;:[&#123;&quot;a&quot;:&#123;&quot;pic&quot;:1&#125;,&quot;b&quot;:&quot;c&quot;&#125;,&#123;&quot;b&quot;:&quot;c&quot;,&quot;d&quot;:&quot;e&quot;&#125;],&quot;test&quot;:true&#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功实现了对f.1.a的删除</p>
+<h4 id="删除的规则"><a href="#删除的规则" class="headerlink" title="删除的规则"></a>删除的规则</h4><p>而删除的规则和替换差不多，多是的后面带“@”的部分</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">节点.节点.节点@&#x3D;存在的值@删除节点.删除节点.删除节点</span><br></pre></td></tr></table></figure>
+
+<p>“节点.节点.节点@=存在的值”是指某节点的值等于你输入的值时，删除“删除节点.删除节点.删除节点”的内容，其中，“存在的值”可以使用正则。</p>
+<p>在刚才的例子中，当jsonObject中的“f”，中的jsonArray“0”，中的jsonObject“a”，中的jsonObject“pic”，等于任何值时，删除jsonObject中的“f”，中的jsonArray“1”，中的jsonObject“a”。</p>
+<p>如果对此不熟练的话，可以点击网页最下方的“返回主页”，将要测试的json输入“要测试的json：”里，将你使用的规则输入“使用的规则：”里，点击检测即可</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">如果同时输入多个规则，包含jsonArray的节点必须按照从大到小的顺序输入，不然可能不起作用！！！</span><br><span class="line"></span><br><span class="line">如果同时输入多个规则，包含jsonArray的节点必须按照从大到小的顺序输入，不然可能不起作用！！！</span><br><span class="line"></span><br><span class="line">如果同时输入多个规则，包含jsonArray的节点必须按照从大到小的顺序输入，不然可能不起作用！！！</span><br><span class="line">````</span><br><span class="line"></span><br><span class="line">注：替换和删除两个模式并不冲突，可以同时使用，但请注意执行的先后顺序。</span><br><span class="line"></span><br><span class="line"><span class="comment"># 生成证书</span></span><br><span class="line"></span><br><span class="line">如果你细心的话，会发现本项目证书的有效期只有两年，因为要是生成太长时间的证书，安卓里的chrome不承认此证书，当然，你也可以使用以下命令自行生成证书</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>#key的生成，这样是生成RSA密钥，openssl格式，2048位强度。ca.key是密钥文件名。<br>openssl genrsa -out ca.key 2048</p>
+<p>#key的转换，转换成netty支持私钥编码格式<br>openssl rsa -in ca.key -out ca_private.der -outform der</p>
+<p>#crt的生成，通过-subj选项可以自定义证书的相关信息<br>openssl req -sha256 -new -x509 -days 730 -key ca.key -out ca.crt -subj “/C=CN/ST=GD/L=SZ/O=zerorooot/OU=study/CN=ZeroProxy”</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">还记得之前说的“Android 7以及以上，系统不再信任用户安装的证书”，所以你需要使用</span><br><span class="line"></span><br><span class="line">&#96;&#96;&#96;bash</span><br><span class="line">cat ca.crt &gt; $(openssl x509 -inform PEM -subject_hash_old -in ca.crt  | head -1).0</span><br></pre></td></tr></table></figure>
+
+<p>命令生成安卓系统所接受的证书，然后把输出的文件移动到<br>/system/etc/security/cacerts/并给与644权限</p>
+<p>当然，对于安卓系统，你也可以安装“move certificates”的magisk模块来解决不信任用户证书的问题</p>
+<h1 id="遇到的问题以及替代方案"><a href="#遇到的问题以及替代方案" class="headerlink" title="遇到的问题以及替代方案"></a>遇到的问题以及替代方案</h1><p>问题：处理时间太长，导致等待的时间太长</p>
+<p>解决：此问题在笔者的树莓派3b+，32位系统中存在（现在已经升级到了64位，到的了很好的解决）。可以尝试使用prioxy中的actionsfile分流。<del>或者换台好点的服务器</del></p>
+<p>问题：太占内存</p>
+<p>解决：确实比较占内存，实测内存大约在150Mb<del>300Mb之间，由于</del>笔者技术所限<del>使用java语言，暂时没有好的解决办法。</del>可以尝试加内存~~</p>
+<p>问题：登不上网页</p>
+<p>解决：确定开启了网页模式，清除网页cookie后再重试（发生于改账号、密码后）</p>
+]]></content>
+      <tags>
+        <tag>ad</tag>
+        <tag>ZeroProxy</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用privoxy去广告</title>
+    <url>/2020/10/08/shi-yong-privoxy-qu-guang-gao/</url>
+    <content><![CDATA[<p>用完privoxy翻墙后，感觉只拿来翻墙有点浪费，而且去广告也算是一个毕竟刚需的内容，所以就有了这篇文章</p>
+<h1 id="使用privoxy-adblock去广告"><a href="#使用privoxy-adblock去广告" class="headerlink" title="使用privoxy-adblock去广告"></a>使用privoxy-adblock去广告</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/zerorooot/privoxy-adblock/master/privoxy-adblock.sh</span><br><span class="line">sudo bash privoxy-adblock.sh</span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;actionsfile easylist.script.action&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;filterfile easylist.script.filter&quot; &gt;&gt; /etc/privoxy/config&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h1 id="自定义去广告"><a href="#自定义去广告" class="headerlink" title="自定义去广告"></a>自定义去广告</h1><p>自定义去广告也使用privoxy-adblock去广告并不冲突，二者可以一起使用</p>
+<p>在之前的privoxy翻墙文章里，我们使用了<a href="https://github.com/zerorooot/PrivoxyGfwWhiteList">PrivoxyGfwWhiteList</a>来翻墙，这次，我们使用它来去广告</p>
+<p>在 <code>template.txt</code>的上面，添加一行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">banad = +forward-override&#123;forward 127.0.0.1:444&#125;</span><br></pre></td></tr></table></figure>
+
+<p>444端口是随意指定的，只要不让网站转发到真实服务器就好</p>
+<p>然后，在 <code>template.txt</code>的最尾，添加</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;banad&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在{banad}下面输入抓包得来的广告网址，如</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&#123;banad&#125;</span><br><span class="line">www.baidu.com</span><br></pre></td></tr></table></figure>
+
+<p>这样，百度就访问不了了</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+<p><strong>注</strong>：这种方法只能屏蔽http开头的网址，https开头的不行</p>
+]]></content>
+      <tags>
+        <tag>privoxy</tag>
+        <tag>ad</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>因为 accessExternalDTD 属性设置的限制导致不允许 &#39;http&#39; 访问</title>
+    <url>/2021/01/02/yin-wei-accessexternaldtd-shu-xing-she-zhi-de-xian-zhi-dao-zhi-bu-yun-xu-http-fang-wen/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上网搜，大部分都是jdk8，在<code>%JAVA_HOEE%\jre\lib\</code> 目录下，新建一个文件jaxp.properties。但我TM用的是jdk11，用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jre11-openjdk-headless jre11-openjdk jdk11-openjdk openjdk11-doc openjdk11-src</span><br></pre></td></tr></table></figure>
+
+<p>安装的，故找不到这个文件。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>其实解决这个问题也很简单，jdk11把此配置文件换了个位置，放在了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-11-openjdk&#x2F;conf&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>这个目录下，所以我们只要</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;javax.xml.accessExternalSchema=all </span></span><br><span class="line"><span class="string">javax.xml.accessExternalDTD=all&quot; &gt;&gt; /usr/lib/jvm/java-11-openjdk/conf/jaxp.properties&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>即可</p>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基于cybergarage实现的Android投屏方案</title>
+    <url>/2021/02/17/ji-yu-cybergarage-shi-xian-de-android-tou-ping-fang-an/</url>
+    <content><![CDATA[<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="导包"><a href="#导包" class="headerlink" title="导包"></a>导包</h2><p>编辑项目<strong>根目录</strong>的build.gradle，添加如下字段</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">allprojects &#123;</span><br><span class="line">    repositories &#123;</span><br><span class="line">        google()</span><br><span class="line">        jcenter()</span><br><span class="line">        maven &#123; url <span class="string">&quot;http://repo.cybergarage.org:8080/maven/repo/&quot;</span> &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后导包</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">implementation <span class="string">&#x27;org.cybergarage.upnp:cybergarage-upnp-core:2.1.1&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="配置权限"><a href="#配置权限" class="headerlink" title="配置权限"></a>配置权限</h2><p>打开<strong>AndroidManifest.xml</strong>，输入</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">&lt;uses-permission android:name=<span class="string">&quot;android.permission.INTERNET&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="导入控制文件"><a href="#导入控制文件" class="headerlink" title="导入控制文件"></a>导入控制文件</h2><p>下载<a href="https://github.com/zerorooot/CyberGarage4Android/tree/master/dlna-lib/src/main/java/com/android/dlna">控制cybergarage</a>的三份文件，导入你的项目中，这三份文件是我们实现DLAN的核心</p>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h2 id="获取可用的设备"><a href="#获取可用的设备" class="headerlink" title="获取可用的设备"></a>获取可用的设备</h2><p>新建一个用于监听的方法和用于存储返回数据的map</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> HashMap&lt;String, Device&gt; hashMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> DLNADeviceManager.MediaRenderDeviceChangeListener mListener = <span class="keyword">new</span> DLNADeviceManager.MediaRenderDeviceChangeListener() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onStarted</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDeviceListChanged</span><span class="params">(List&lt;Device&gt; list)</span> </span>&#123;</span><br><span class="line">            list.forEach(s -&gt; &#123;</span><br><span class="line">                <span class="keyword">if</span> (hashMap.get(s.getFriendlyName()) == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    hashMap.put(s.getFriendlyName(), s);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFinished</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>启用监听</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DLNADeviceManager.getInstance().startDiscovery(mListener);</span><br></pre></td></tr></table></figure>
+
+<p>当搜索到局域网里符合条件的设备后，<code>MediaRenderDeviceChangeListener</code>会把<code>Device</code>放入我们的<code>hashMap</code>中。</p>
+<p>完成后，别忘了关闭搜索</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">DLNADeviceManager.getInstance().stopDiscovery();</span><br></pre></td></tr></table></figure>
+
+<h2 id="控制设备"><a href="#控制设备" class="headerlink" title="控制设备"></a>控制设备</h2><p>创建控制方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">IController mController = <span class="keyword">new</span> MultiPointController();</span><br></pre></td></tr></table></figure>
+
+<p>通过mController，我们就可以控制DLAN的播放、暂停、声音、进度等</p>
+<p>比如播放某视频</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String url = <span class="string">&quot;http://video19.ifeng.com/video07/2013/11/11/281708-102-007-1138.mp4&quot;</span>;</span><br><span class="line">hashMap.forEach((k, v) -&gt; &#123;</span><br><span class="line">       mController.play(v, url);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>停止播放</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">hashMap.forEach((k, v) -&gt; &#123;</span><br><span class="line">      mController.stop(v);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>等等</p>
+<h2 id="获取状态"><a href="#获取状态" class="headerlink" title="获取状态"></a>获取状态</h2><p>通过<code>new IController.PlayerMonitor()</code>来获取，具体方法还请自己继承，这里为了方便仅展示了两个方法。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">mController.setPlayMonitor(<span class="keyword">new</span> IController.PlayerMonitor() &#123;</span><br><span class="line">    .....</span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onVolumeChanged</span><span class="params">(<span class="keyword">int</span> current)</span> </span>&#123;&#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onProgressUpdated</span><span class="params">(<span class="keyword">int</span> currentTimeSeconds)</span> </span>&#123;&#125;</span><br><span class="line">    ....</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>好了，Android的DLAN就是这么的简单~</p>
+<h1 id="感谢"><a href="#感谢" class="headerlink" title="感谢"></a>感谢</h1><p>感谢<a href="https://github.com/zhangwenxue/CyberGarage4Android">CyberGarage4Android</a>，项目中的核心文件就是从这个项目中<del>抄袭</del>借鉴的</p>
+]]></content>
+      <tags>
+        <tag>android</tag>
+        <tag>DLAN</tag>
+        <tag>投屏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>强制apt使用ipv4</title>
+    <url>/2020/10/08/qiang-zhi-apt-shi-yong-ipv4/</url>
+    <content><![CDATA[<p>echo ‘Acquire::ForceIPv4 “true”;’ | sudo tee /etc/apt/apt.conf.d/99force-ipv4</p>
+]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>apt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>配置samba服务</title>
+    <url>/2020/10/08/pei-zhi-samba-fu-wu/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install samba</span><br></pre></td></tr></table></figure>
+
+
+<p>添加用户(下面的ubuntu是我的用户名，之后会需要设置samba的密码)。 </p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo smbpasswd -a ubuntu</span><br><span class="line">sudo vim /etc/samba/smb.conf</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[ubuntu]</span><br><span class="line">comment &#x3D; share folder</span><br><span class="line">browseable &#x3D; yes</span><br><span class="line">path &#x3D; &#x2F;home&#x2F;ubuntu</span><br><span class="line">create mask &#x3D; 0700</span><br><span class="line">directory mask &#x3D; 0700</span><br><span class="line">valid users &#x3D; ubuntu</span><br><span class="line">force user &#x3D; ubuntu</span><br><span class="line">force group &#x3D; ubuntu</span><br><span class="line">public &#x3D; no</span><br><span class="line">available &#x3D; yes</span><br><span class="line">writable &#x3D; yes</span><br></pre></td></tr></table></figure>
+
+
+
+<p>测试你配置的smb.conf是否正确，用下面的命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">testparm</span><br></pre></td></tr></table></figure>
+
+<p>重启samba服务器。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo service smbd restart</span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>samba</tag>
+      </tags>
+  </entry>
+</search>
