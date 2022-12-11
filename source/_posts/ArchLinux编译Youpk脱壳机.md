@@ -13,10 +13,10 @@ description:本文记录了Youpk脱壳机在archlinux下的编译环境搭建和
 sudo pacman -S bc curl git gnupg gperf lib32-expat lib32-gcc-libs lib32-glib2 lib32-glibc lib32-libdbus lib32-libffi lib32-libpng lib32-ncurses lib32-pcre lib32-readline lib32-zlib libpng libxml2 libxslt ncurses perl-switch readline schedtool sdl squashfs-tools unzip wxgtk zip zlib repo python-virtualenv ccache base-devel
 ```
 
-# 
+# 配置jdk8环境
 
 ```bash
-#sudo archlinux-java set java-8-openjdk
+sudo archlinux-java set java-8-openjdk
 ```
 
 # 编译相关
