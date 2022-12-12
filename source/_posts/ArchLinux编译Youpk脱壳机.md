@@ -4,7 +4,7 @@ tags:
   - arch
   - aosp编译
 date: 2022-11-30 23:11:36
-description:本文记录了Youpk脱壳机在archlinux下的编译环境搭建和错误处理过程.
+description: 本文记录了Youpk脱壳机在archlinux下的编译环境搭建和错误处理过程.
 ---
 
 # 安装依赖
