@@ -21,18 +21,15 @@ sudo archlinux-java set java-8-openjdk
 
 # 编译相关
 
-具体教程可以查看`https://mirrors.tuna.tsinghua.edu.cn/help/AOSP/`
+具体教程可以查看`https://mirrors.ustc.edu.cn/help/aosp.html`
 
 ## 下载AOSP源码
 
 ```
 mkdir aosp
 cd aosp
-#初始化仓库
-repo init -u https://aosp.tuna.tsinghua.edu.cn/platform/manifest
 #下载指定的android版本
-repo init -u 
-https://aosp.tuna.tsinghua.edu.cn/platform/manifest -b android-7.1.2_r33 --depth 1
+repo init -u git://mirrors.ustc.edu.cn/aosp/platform/manifest -b android-7.1.2_r33 --depth 1 
 #并发数不宜太高，否则会出现 503 错误
 repo sync -j4
 #repo sync --force-sync -j4
@@ -52,8 +49,8 @@ rm -rf unpacker/
 ### 创建链接，防止出现so文件找不到
 
 ```bash
-sudo ln -sf /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 
-sudo ln -sf /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+sudo ln /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 
+sudo ln  /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
 ```
 
 ### 添加frameworks白名单
@@ -66,7 +63,6 @@ vim build/core/tasks/check_boot_jars/package_whitelist.txt
 
 ```
 cn\.youlor
-cn\.youlor\.Unpacker
 ```
 
 ### 启用ccache缓存
@@ -113,3 +109,9 @@ make -j$(nproc --all)
 #等待编译结束后，别忘了清除缓存
 #ccache -c
 ```
+
+
+
+# 参考
+
+https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/
