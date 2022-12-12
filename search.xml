@@ -22,6 +22,42 @@
       </tags>
   </entry>
   <entry>
+    <title>ArchLinux编译Youpk脱壳机</title>
+    <url>/2022/11/30/archlinux-bian-yi-youpk-tuo-ke-ji/</url>
+    <content><![CDATA[<h1 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo pacman -S bc curl git gnupg gperf lib32-expat lib32-gcc-libs lib32-glib2 lib32-glibc lib32-libdbus lib32-libffi lib32-libpng lib32-ncurses lib32-pcre lib32-readline lib32-zlib libpng libxml2 libxslt ncurses perl-switch readline schedtool sdl squashfs-tools unzip wxgtk zip zlib repo python-virtualenv ccache base-devel</span><br></pre></td></tr></table></figure>
+
+<h1 id="配置jdk8环境"><a href="#配置jdk8环境" class="headerlink" title="配置jdk8环境"></a>配置jdk8环境</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo archlinux-java <span class="built_in">set</span> java-8-openjdk</span><br></pre></td></tr></table></figure>
+
+<h1 id="编译相关"><a href="#编译相关" class="headerlink" title="编译相关"></a>编译相关</h1><p>具体教程可以查看<code>https://mirrors.ustc.edu.cn/help/aosp.html</code></p>
+<h2 id="下载AOSP源码"><a href="#下载AOSP源码" class="headerlink" title="下载AOSP源码"></a>下载AOSP源码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir aosp</span><br><span class="line">cd aosp</span><br><span class="line">#下载指定的android版本</span><br><span class="line">repo init -u git:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;aosp&#x2F;platform&#x2F;manifest -b android-7.1.2_r33 --depth 1 </span><br><span class="line">#并发数不宜太高，否则会出现 503 错误</span><br><span class="line">repo sync -j4</span><br><span class="line">#repo sync --force-sync -j4</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载Youpk源码"><a href="#下载Youpk源码" class="headerlink" title="下载Youpk源码"></a>下载Youpk源码</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#回到下载aosp的主目录</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/Youlor/unpacker</span><br><span class="line">cp -r -n unpacker/android-7.1.2_r33/* .</span><br><span class="line">rm -rf unpacker/</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置编译环境"><a href="#配置编译环境" class="headerlink" title="配置编译环境"></a>配置编译环境</h2><h3 id="创建链接，防止出现so文件找不到"><a href="#创建链接，防止出现so文件找不到" class="headerlink" title="创建链接，防止出现so文件找不到"></a>创建链接，防止出现so文件找不到</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ln /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 </span><br><span class="line">sudo ln  /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加frameworks白名单"><a href="#添加frameworks白名单" class="headerlink" title="添加frameworks白名单"></a>添加frameworks白名单</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim build/core/tasks/check_boot_jars/package_whitelist.txt</span><br></pre></td></tr></table></figure>
+
+<p>新起一行，添加</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cn\.youlor</span><br></pre></td></tr></table></figure>
+
+<h3 id="启用ccache缓存"><a href="#启用ccache缓存" class="headerlink" title="启用ccache缓存"></a>启用ccache缓存</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#启用缓存</span></span><br><span class="line"><span class="built_in">export</span> USE_CCACHE=1</span><br><span class="line"><span class="comment">#缓存位置</span></span><br><span class="line"><span class="built_in">export</span> CCACHE_DIR=~/.ccache </span><br><span class="line"><span class="comment">#缓存大小</span></span><br><span class="line">ccache -M 50G</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置swap"><a href="#设置swap" class="headerlink" title="设置swap"></a>设置swap</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#建一个 8G 的文件</span></span><br><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swap bs=1M count=8192</span><br><span class="line"><span class="comment">#建立 Swap 的文件系统</span></span><br><span class="line">sudo mkswap /swap</span><br><span class="line"><span class="comment">#启用 Swap 分区</span></span><br><span class="line">sudo swapon /swap</span><br><span class="line"><span class="comment">#修改swappiness值为60,0表示最大限度使用物理内存,100表示积极的使用swap分区</span></span><br><span class="line">sudo sysctl vm.swappiness=60</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置py2环境"><a href="#配置py2环境" class="headerlink" title="配置py2环境"></a>配置py2环境</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">virtualenv venv --python=python2.7</span><br><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br></pre></td></tr></table></figure>
+
+<h2 id="正式编译"><a href="#正式编译" class="headerlink" title="正式编译"></a>正式编译</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#同步环境信息</span></span><br><span class="line"><span class="built_in">source</span> build/envsetup.sh</span><br><span class="line"><span class="built_in">export</span> LC_ALL=C</span><br><span class="line"><span class="comment">#选择 aosp_x86_64-eng</span></span><br><span class="line">lunch</span><br><span class="line"><span class="comment">#正式开始编译</span></span><br><span class="line">make -j$(nproc --all)</span><br><span class="line"><span class="comment">#等待编译结束后，别忘了清除缓存</span></span><br><span class="line"><span class="comment">#ccache -c</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/">https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/</a></p>
+]]></content>
+      <tags>
+        <tag>arch</tag>
+        <tag>aosp编译</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Debian-Ubuntu-安装-ssr</title>
     <url>/2020/10/08/debian-ubuntu-an-zhuang-ssr/</url>
     <content><![CDATA[<h1 id="完整版"><a href="#完整版" class="headerlink" title="完整版"></a>完整版</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install build-essential autoconf libtool libssl-dev gawk debhelper dh-systemd init-system-helpers pkg-config asciidoc xmlto apg libpcre3-dev zlib1g-dev git make libsodium-dev -y</span><br><span class="line">git <span class="built_in">clone</span> https://github.com/shadowsocksrr/shadowsocksr-libev.git</span><br><span class="line"><span class="built_in">cd</span> shadowsocksr-libev.git</span><br><span class="line">./configure</span><br><span class="line">修改 src/Makefile.in 和 src/Makefile.am 文件，删除中间的 -Werror</span><br><span class="line">make</span><br><span class="line">配置config.json文件</span><br><span class="line">./src/ss-local -c config.json</span><br></pre></td></tr></table></figure>

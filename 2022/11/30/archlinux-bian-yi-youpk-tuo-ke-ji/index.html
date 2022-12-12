@@ -23,22 +23,22 @@
     var CONFIG = {"hostname":"zerorooot.github.io","root":"/","scheme":"Muse","version":"8.0.1","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}};
   </script>
 
-  <meta name="description" content="openssl x509 -inform der -in mycert.der -out mycert.cer">
+  <meta name="description" content="本文记录了Youpk脱壳机在archlinux下的编译环境搭建和错误处理过程.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Android安装BurpSuite CA证书">
-<meta property="og:url" content="https://zerorooot.github.io/2021/01/15/android-an-zhuang-burpsuite-ca-zheng-shu/index.html">
+<meta property="og:title" content="ArchLinux编译Youpk脱壳机">
+<meta property="og:url" content="https://zerorooot.github.io/2022/11/30/archlinux-bian-yi-youpk-tuo-ke-ji/index.html">
 <meta property="og:site_name" content="zerorooot的小屋">
-<meta property="og:description" content="openssl x509 -inform der -in mycert.der -out mycert.cer">
+<meta property="og:description" content="本文记录了Youpk脱壳机在archlinux下的编译环境搭建和错误处理过程.">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-01-15T02:42:42.000Z">
-<meta property="article:modified_time" content="2022-12-11T08:29:08.219Z">
+<meta property="article:published_time" content="2022-11-30T15:11:36.000Z">
+<meta property="article:modified_time" content="2022-12-12T15:36:54.429Z">
 <meta property="article:author" content="zerorooot">
-<meta property="article:tag" content="BurpSuite">
-<meta property="article:tag" content="Android">
+<meta property="article:tag" content="arch">
+<meta property="article:tag" content="aosp编译">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://zerorooot.github.io/2021/01/15/android-an-zhuang-burpsuite-ca-zheng-shu/">
+<link rel="canonical" href="https://zerorooot.github.io/2022/11/30/archlinux-bian-yi-youpk-tuo-ke-ji/">
 
 
 <script class="page-configurations">
@@ -51,7 +51,7 @@
   };
 </script>
 
-  <title>Android安装BurpSuite CA证书 | zerorooot的小屋</title>
+  <title>ArchLinux编译Youpk脱壳机 | zerorooot的小屋</title>
   
 
 
@@ -201,7 +201,7 @@
 
       <!--noindex-->
       <section class="post-toc-wrap sidebar-panel">
-          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96BurpSuite-CA%E8%AF%81%E4%B9%A6"><span class="nav-number">1.</span> <span class="nav-text">获取BurpSuite CA证书</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80"><span class="nav-number">1.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C"><span class="nav-number">1.2.</span> <span class="nav-text">方法二</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B0%86%E8%AF%81%E4%B9%A6%E8%BD%AC%E6%88%90Android%E6%89%80%E8%83%BD%E8%AF%86%E5%88%AB%E7%9A%84"><span class="nav-number">2.</span> <span class="nav-text">将证书转成Android所能识别的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5Android"><span class="nav-number">3.</span> <span class="nav-text">导入Android</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%B8%80-1"><span class="nav-number">3.1.</span> <span class="nav-text">方法一</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E4%BA%8C-1"><span class="nav-number">3.2.</span> <span class="nav-text">方法二</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E8%AF%81%E4%B9%A6"><span class="nav-number">3.2.1.</span> <span class="nav-text">安装证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85move-certificates"><span class="nav-number">3.2.2.</span> <span class="nav-text">安装move certificates</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96"><span class="nav-number">1.</span> <span class="nav-text">安装依赖</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEjdk8%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">配置jdk8环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E7%9B%B8%E5%85%B3"><span class="nav-number">3.</span> <span class="nav-text">编译相关</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDAOSP%E6%BA%90%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">下载AOSP源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8B%E8%BD%BDYoupk%E6%BA%90%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">下载Youpk源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83"><span class="nav-number">3.3.</span> <span class="nav-text">配置编译环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E9%93%BE%E6%8E%A5%EF%BC%8C%E9%98%B2%E6%AD%A2%E5%87%BA%E7%8E%B0so%E6%96%87%E4%BB%B6%E6%89%BE%E4%B8%8D%E5%88%B0"><span class="nav-number">3.3.1.</span> <span class="nav-text">创建链接，防止出现so文件找不到</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0frameworks%E7%99%BD%E5%90%8D%E5%8D%95"><span class="nav-number">3.3.2.</span> <span class="nav-text">添加frameworks白名单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E7%94%A8ccache%E7%BC%93%E5%AD%98"><span class="nav-number">3.3.3.</span> <span class="nav-text">启用ccache缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AEswap"><span class="nav-number">3.3.4.</span> <span class="nav-text">设置swap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEpy2%E7%8E%AF%E5%A2%83"><span class="nav-number">3.3.5.</span> <span class="nav-text">配置py2环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%BC%8F%E7%BC%96%E8%AF%91"><span class="nav-number">3.4.</span> <span class="nav-text">正式编译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </section>
       <!--/noindex-->
 
@@ -273,7 +273,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://zerorooot.github.io/2021/01/15/android-an-zhuang-burpsuite-ca-zheng-shu/">
+    <link itemprop="mainEntityOfPage" href="https://zerorooot.github.io/2022/11/30/archlinux-bian-yi-youpk-tuo-ke-ji/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.jpg">
@@ -286,7 +286,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Android安装BurpSuite CA证书
+          ArchLinux编译Youpk脱壳机
         </h1>
 
         <div class="post-meta-container">
@@ -297,14 +297,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2021-01-15 10:42:42" itemprop="dateCreated datePublished" datetime="2021-01-15T10:42:42+08:00">2021-01-15</time>
+      <time title="创建时间：2022-11-30 23:11:36" itemprop="dateCreated datePublished" datetime="2022-11-30T23:11:36+08:00">2022-11-30</time>
     </span>
       <span class="post-meta-item">
         <span class="post-meta-item-icon">
           <i class="far fa-calendar-check"></i>
         </span>
         <span class="post-meta-item-text">更新于</span>
-        <time title="修改时间：2022-12-11 16:29:08" itemprop="dateModified" datetime="2022-12-11T16:29:08+08:00">2022-12-11</time>
+        <time title="修改时间：2022-12-12 23:36:54" itemprop="dateModified" datetime="2022-12-12T23:36:54+08:00">2022-12-12</time>
       </span>
 
   
@@ -322,7 +322,7 @@
         <i class="far fa-file-word"></i>
       </span>
       <span class="post-meta-item-text">本文字数：</span>
-      <span>565</span>
+      <span>1.5k</span>
     </span>
     <span class="post-meta-item" title="阅读时长">
       <span class="post-meta-item-icon">
@@ -333,7 +333,7 @@
     </span>
 </div>
 
-            <div class="post-description">openssl x509 -inform der -in mycert.der -out mycert.cer</div>
+            <div class="post-description">本文记录了Youpk脱壳机在archlinux下的编译环境搭建和错误处理过程.</div>
         </div>
       </header>
 
@@ -341,18 +341,33 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="获取BurpSuite-CA证书"><a href="#获取BurpSuite-CA证书" class="headerlink" title="获取BurpSuite CA证书"></a>获取BurpSuite CA证书</h1><h2 id="方法一"><a href="#方法一" class="headerlink" title="方法一"></a>方法一</h2><p>让浏览器开了127.0.0.1:8080代理，通过浏览器访问  <a target="_blank" rel="noopener" href="http://burp/">http://burp</a> </p>
-<h2 id="方法二"><a href="#方法二" class="headerlink" title="方法二"></a>方法二</h2><p>打开BurpSuite，点击</p>
-<p>proxy-&gt;options-&gt;import/export CA certificate-&gt;Certificate in DER format</p>
-<p>选择导出的文件夹和文件名，点next 即可</p>
-<h1 id="将证书转成Android所能识别的"><a href="#将证书转成Android所能识别的" class="headerlink" title="将证书转成Android所能识别的"></a>将证书转成Android所能识别的</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">openssl x509 -inform der -<span class="keyword">in</span> cacert.der -out ca.crt</span><br><span class="line">cat ca.crt &gt; $(openssl x509 -inform PEM -subject_hash_old -<span class="keyword">in</span> ca.crt  | head -1).0</span><br></pre></td></tr></table></figure>
+        <h1 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo pacman -S bc curl git gnupg gperf lib32-expat lib32-gcc-libs lib32-glib2 lib32-glibc lib32-libdbus lib32-libffi lib32-libpng lib32-ncurses lib32-pcre lib32-readline lib32-zlib libpng libxml2 libxslt ncurses perl-switch readline schedtool sdl squashfs-tools unzip wxgtk zip zlib repo python-virtualenv ccache base-devel</span><br></pre></td></tr></table></figure>
 
-<p>这时候会输出一个xxxx.0的文件，这个文件就是我们所需要的，我这里是9a5ba575.0</p>
-<p>注：请把cacert.der改成你导出ca证书的文件名</p>
-<h1 id="导入Android"><a href="#导入Android" class="headerlink" title="导入Android"></a>导入Android</h1><h2 id="方法一-1"><a href="#方法一-1" class="headerlink" title="方法一"></a>方法一</h2><p>把输出的文件”xxxxx.0”移动到 /system/etc/security/cacerts/并给与644权限</p>
-<h2 id="方法二-1"><a href="#方法二-1" class="headerlink" title="方法二"></a>方法二</h2><h3 id="安装证书"><a href="#安装证书" class="headerlink" title="安装证书"></a>安装证书</h3><p>在手机上，打开设置-&gt;安全和锁屏-&gt;凭据存储-&gt;从存储设备中安装</p>
-<p>安装上文生成的”ca.crt”证书</p>
-<h3 id="安装move-certificates"><a href="#安装move-certificates" class="headerlink" title="安装move certificates"></a>安装move certificates</h3><p>在magisk中，搜索”move certificates”并安装，重启即可</p>
+<h1 id="配置jdk8环境"><a href="#配置jdk8环境" class="headerlink" title="配置jdk8环境"></a>配置jdk8环境</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo archlinux-java <span class="built_in">set</span> java-8-openjdk</span><br></pre></td></tr></table></figure>
+
+<h1 id="编译相关"><a href="#编译相关" class="headerlink" title="编译相关"></a>编译相关</h1><p>具体教程可以查看<code>https://mirrors.ustc.edu.cn/help/aosp.html</code></p>
+<h2 id="下载AOSP源码"><a href="#下载AOSP源码" class="headerlink" title="下载AOSP源码"></a>下载AOSP源码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mkdir aosp</span><br><span class="line">cd aosp</span><br><span class="line">#下载指定的android版本</span><br><span class="line">repo init -u git:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;aosp&#x2F;platform&#x2F;manifest -b android-7.1.2_r33 --depth 1 </span><br><span class="line">#并发数不宜太高，否则会出现 503 错误</span><br><span class="line">repo sync -j4</span><br><span class="line">#repo sync --force-sync -j4</span><br></pre></td></tr></table></figure>
+
+<h2 id="下载Youpk源码"><a href="#下载Youpk源码" class="headerlink" title="下载Youpk源码"></a>下载Youpk源码</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#回到下载aosp的主目录</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/Youlor/unpacker</span><br><span class="line">cp -r -n unpacker/android-7.1.2_r33/* .</span><br><span class="line">rm -rf unpacker/</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置编译环境"><a href="#配置编译环境" class="headerlink" title="配置编译环境"></a>配置编译环境</h2><h3 id="创建链接，防止出现so文件找不到"><a href="#创建链接，防止出现so文件找不到" class="headerlink" title="创建链接，防止出现so文件找不到"></a>创建链接，防止出现so文件找不到</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo ln /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 </span><br><span class="line">sudo ln  /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加frameworks白名单"><a href="#添加frameworks白名单" class="headerlink" title="添加frameworks白名单"></a>添加frameworks白名单</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim build/core/tasks/check_boot_jars/package_whitelist.txt</span><br></pre></td></tr></table></figure>
+
+<p>新起一行，添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cn\.youlor</span><br></pre></td></tr></table></figure>
+
+<h3 id="启用ccache缓存"><a href="#启用ccache缓存" class="headerlink" title="启用ccache缓存"></a>启用ccache缓存</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启用缓存</span></span><br><span class="line"><span class="built_in">export</span> USE_CCACHE=1</span><br><span class="line"><span class="comment">#缓存位置</span></span><br><span class="line"><span class="built_in">export</span> CCACHE_DIR=~/.ccache </span><br><span class="line"><span class="comment">#缓存大小</span></span><br><span class="line">ccache -M 50G</span><br></pre></td></tr></table></figure>
+
+<h3 id="设置swap"><a href="#设置swap" class="headerlink" title="设置swap"></a>设置swap</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#建一个 8G 的文件</span></span><br><span class="line">sudo dd <span class="keyword">if</span>=/dev/zero of=/swap bs=1M count=8192</span><br><span class="line"><span class="comment">#建立 Swap 的文件系统</span></span><br><span class="line">sudo mkswap /swap</span><br><span class="line"><span class="comment">#启用 Swap 分区</span></span><br><span class="line">sudo swapon /swap</span><br><span class="line"><span class="comment">#修改swappiness值为60,0表示最大限度使用物理内存,100表示积极的使用swap分区</span></span><br><span class="line">sudo sysctl vm.swappiness=60</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置py2环境"><a href="#配置py2环境" class="headerlink" title="配置py2环境"></a>配置py2环境</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">virtualenv venv --python=python2.7</span><br><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br></pre></td></tr></table></figure>
+
+<h2 id="正式编译"><a href="#正式编译" class="headerlink" title="正式编译"></a>正式编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#同步环境信息</span></span><br><span class="line"><span class="built_in">source</span> build/envsetup.sh</span><br><span class="line"><span class="built_in">export</span> LC_ALL=C</span><br><span class="line"><span class="comment">#选择 aosp_x86_64-eng</span></span><br><span class="line">lunch</span><br><span class="line"><span class="comment">#正式开始编译</span></span><br><span class="line">make -j$(nproc --all)</span><br><span class="line"><span class="comment">#等待编译结束后，别忘了清除缓存</span></span><br><span class="line"><span class="comment">#ccache -c</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/">https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/</a></p>
 
     </div>
 
@@ -362,22 +377,19 @@
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/BurpSuite/" rel="tag"># BurpSuite</a>
-              <a href="/tags/Android/" rel="tag"># Android</a>
+              <a href="/tags/arch/" rel="tag"># arch</a>
+              <a href="/tags/aosp%E7%BC%96%E8%AF%91/" rel="tag"># aosp编译</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2021/01/02/yin-wei-accessexternaldtd-shu-xing-she-zhi-de-xian-zhi-dao-zhi-bu-yun-xu-http-fang-wen/" rel="prev" title="因为 accessExternalDTD 属性设置的限制导致不允许 'http' 访问">
-                  <i class="fa fa-chevron-left"></i> 因为 accessExternalDTD 属性设置的限制导致不允许 'http' 访问
+                <a href="/2021/02/17/ji-yu-cybergarage-shi-xian-de-android-tou-ping-fang-an/" rel="prev" title="基于cybergarage实现的Android投屏方案">
+                  <i class="fa fa-chevron-left"></i> 基于cybergarage实现的Android投屏方案
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2021/02/11/ijkplayer-bian-yi/" rel="next" title="ijkplayer编译">
-                  ijkplayer编译 <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
     </footer>
