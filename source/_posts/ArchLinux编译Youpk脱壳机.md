@@ -21,9 +21,9 @@ sudo archlinux-java set java-8-openjdk
 
 # 编译相关
 
-具体教程可以查看`https://mirrors.ustc.edu.cn/help/aosp.html`
-
 ## 下载AOSP源码
+
+具体教程可以查看`https://mirrors.ustc.edu.cn/help/aosp.html`
 
 ```
 mkdir aosp
@@ -50,7 +50,7 @@ rm -rf unpacker/
 
 ```bash
 sudo ln /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 
-sudo ln  /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
+sudo ln /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5
 ```
 
 ### 添加frameworks白名单
@@ -102,12 +102,15 @@ source venv/bin/activate
 #同步环境信息
 source build/envsetup.sh
 export LC_ALL=C
-#选择 aosp_x86_64-eng
-lunch
+# ./build/target/product/sdk_phone_arm64
+#lunch sdk_phone_arm64-eng
+lunch aosp_x86_64-eng
 #正式开始编译
 make -j$(nproc --all)
 #等待编译结束后，别忘了清除缓存
 #ccache -c
+#启动模拟器
+emulator
 ```
 
 
@@ -115,3 +118,7 @@ make -j$(nproc --all)
 # 参考
 
 https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/
+
+https://source.android.com/docs/setup/create/avd?hl=zh-cn
+
+https://developer.android.com/studio/run/emulator-commandline#help-all
