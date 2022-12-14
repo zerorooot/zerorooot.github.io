@@ -28,12 +28,12 @@
 
 <h1 id="配置jdk8环境"><a href="#配置jdk8环境" class="headerlink" title="配置jdk8环境"></a>配置jdk8环境</h1><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo archlinux-java <span class="built_in">set</span> java-8-openjdk</span><br></pre></td></tr></table></figure>
 
-<h1 id="编译相关"><a href="#编译相关" class="headerlink" title="编译相关"></a>编译相关</h1><p>具体教程可以查看<code>https://mirrors.ustc.edu.cn/help/aosp.html</code></p>
-<h2 id="下载AOSP源码"><a href="#下载AOSP源码" class="headerlink" title="下载AOSP源码"></a>下载AOSP源码</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir aosp</span><br><span class="line">cd aosp</span><br><span class="line">#下载指定的android版本</span><br><span class="line">repo init -u git:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;aosp&#x2F;platform&#x2F;manifest -b android-7.1.2_r33 --depth 1 </span><br><span class="line">#并发数不宜太高，否则会出现 503 错误</span><br><span class="line">repo sync -j4</span><br><span class="line">#repo sync --force-sync -j4</span><br></pre></td></tr></table></figure>
+<h1 id="编译相关"><a href="#编译相关" class="headerlink" title="编译相关"></a>编译相关</h1><h2 id="下载AOSP源码"><a href="#下载AOSP源码" class="headerlink" title="下载AOSP源码"></a>下载AOSP源码</h2><p>具体教程可以查看<code>https://mirrors.ustc.edu.cn/help/aosp.html</code></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir aosp</span><br><span class="line">cd aosp</span><br><span class="line">#下载指定的android版本</span><br><span class="line">repo init -u git:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;aosp&#x2F;platform&#x2F;manifest -b android-7.1.2_r33 --depth 1 </span><br><span class="line">#并发数不宜太高，否则会出现 503 错误</span><br><span class="line">repo sync -j4</span><br><span class="line">#repo sync --force-sync -j4</span><br></pre></td></tr></table></figure>
 
 <h2 id="下载Youpk源码"><a href="#下载Youpk源码" class="headerlink" title="下载Youpk源码"></a>下载Youpk源码</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#回到下载aosp的主目录</span></span><br><span class="line">git <span class="built_in">clone</span> https://github.com/Youlor/unpacker</span><br><span class="line">cp -r -n unpacker/android-7.1.2_r33/* .</span><br><span class="line">rm -rf unpacker/</span><br></pre></td></tr></table></figure>
 
-<h2 id="配置编译环境"><a href="#配置编译环境" class="headerlink" title="配置编译环境"></a>配置编译环境</h2><h3 id="创建链接，防止出现so文件找不到"><a href="#创建链接，防止出现so文件找不到" class="headerlink" title="创建链接，防止出现so文件找不到"></a>创建链接，防止出现so文件找不到</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ln /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 </span><br><span class="line">sudo ln  /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5</span><br></pre></td></tr></table></figure>
+<h2 id="配置编译环境"><a href="#配置编译环境" class="headerlink" title="配置编译环境"></a>配置编译环境</h2><h3 id="创建链接，防止出现so文件找不到"><a href="#创建链接，防止出现so文件找不到" class="headerlink" title="创建链接，防止出现so文件找不到"></a>创建链接，防止出现so文件找不到</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo ln /usr/lib64/libncursesw.so.6 /usr/lib/libncurses.so.5 </span><br><span class="line">sudo ln /usr/lib/libtinfo.so.6 /usr/lib/libtinfo.so.5</span><br></pre></td></tr></table></figure>
 
 <h3 id="添加frameworks白名单"><a href="#添加frameworks白名单" class="headerlink" title="添加frameworks白名单"></a>添加frameworks白名单</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim build/core/tasks/check_boot_jars/package_whitelist.txt</span><br></pre></td></tr></table></figure>
 
@@ -46,11 +46,13 @@
 
 <h3 id="配置py2环境"><a href="#配置py2环境" class="headerlink" title="配置py2环境"></a>配置py2环境</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">virtualenv venv --python=python2.7</span><br><span class="line"><span class="built_in">source</span> venv/bin/activate</span><br></pre></td></tr></table></figure>
 
-<h2 id="正式编译"><a href="#正式编译" class="headerlink" title="正式编译"></a>正式编译</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#同步环境信息</span></span><br><span class="line"><span class="built_in">source</span> build/envsetup.sh</span><br><span class="line"><span class="built_in">export</span> LC_ALL=C</span><br><span class="line"><span class="comment">#选择 aosp_x86_64-eng</span></span><br><span class="line">lunch</span><br><span class="line"><span class="comment">#正式开始编译</span></span><br><span class="line">make -j$(nproc --all)</span><br><span class="line"><span class="comment">#等待编译结束后，别忘了清除缓存</span></span><br><span class="line"><span class="comment">#ccache -c</span></span><br></pre></td></tr></table></figure>
+<h2 id="正式编译"><a href="#正式编译" class="headerlink" title="正式编译"></a>正式编译</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#同步环境信息</span></span><br><span class="line"><span class="built_in">source</span> build/envsetup.sh</span><br><span class="line"><span class="built_in">export</span> LC_ALL=C</span><br><span class="line"><span class="comment"># ./build/target/product/sdk_phone_arm64</span></span><br><span class="line"><span class="comment">#lunch sdk_phone_arm64-eng</span></span><br><span class="line">lunch aosp_x86_64-eng</span><br><span class="line"><span class="comment">#正式开始编译</span></span><br><span class="line">make -j$(nproc --all)</span><br><span class="line"><span class="comment">#等待编译结束后，别忘了清除缓存</span></span><br><span class="line"><span class="comment">#ccache -c</span></span><br><span class="line"><span class="comment">#启动模拟器</span></span><br><span class="line">emulator</span><br></pre></td></tr></table></figure>
 
 
 
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/">https://wxy1343.xyz/2022/10/30/Youpk%E8%84%B1%E5%A3%B3%E6%9C%BA%E7%BC%96%E8%AF%91/</a></p>
+<p><a href="https://source.android.com/docs/setup/create/avd?hl=zh-cn">https://source.android.com/docs/setup/create/avd?hl=zh-cn</a></p>
+<p><a href="https://developer.android.com/studio/run/emulator-commandline#help-all">https://developer.android.com/studio/run/emulator-commandline#help-all</a></p>
 ]]></content>
       <tags>
         <tag>arch</tag>
@@ -593,25 +595,6 @@
       </tags>
   </entry>
   <entry>
-    <title>因为 accessExternalDTD 属性设置的限制导致不允许 &#39;http&#39; 访问</title>
-    <url>/2021/01/02/yin-wei-accessexternaldtd-shu-xing-she-zhi-de-xian-zhi-dao-zhi-bu-yun-xu-http-fang-wen/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上网搜，大部分都是jdk8，在<code>%JAVA_HOEE%\jre\lib\</code> 目录下，新建一个文件jaxp.properties。但我TM用的是jdk11，用</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jre11-openjdk-headless jre11-openjdk jdk11-openjdk openjdk11-doc openjdk11-src</span><br></pre></td></tr></table></figure>
-
-<p>安装的，故找不到这个文件。</p>
-<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>其实解决这个问题也很简单，jdk11把此配置文件换了个位置，放在了</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-11-openjdk&#x2F;conf&#x2F;</span><br></pre></td></tr></table></figure>
-
-<p>这个目录下，所以我们只要</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;javax.xml.accessExternalSchema=all </span></span><br><span class="line"><span class="string">javax.xml.accessExternalDTD=all&quot; &gt;&gt; /usr/lib/jvm/java-11-openjdk/conf/jaxp.properties&#x27;</span></span><br></pre></td></tr></table></figure>
-
-<p>即可</p>
-]]></content>
-      <tags>
-        <tag>linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基于cybergarage实现的Android投屏方案</title>
     <url>/2021/02/17/ji-yu-cybergarage-shi-xian-de-android-tou-ping-fang-an/</url>
     <content><![CDATA[<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><h2 id="导包"><a href="#导包" class="headerlink" title="导包"></a>导包</h2><p>编辑项目<strong>根目录</strong>的build.gradle，添加如下字段</p>
@@ -655,6 +638,25 @@
         <tag>android</tag>
         <tag>DLAN</tag>
         <tag>投屏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>因为 accessExternalDTD 属性设置的限制导致不允许 &#39;http&#39; 访问</title>
+    <url>/2021/01/02/yin-wei-accessexternaldtd-shu-xing-she-zhi-de-xian-zhi-dao-zhi-bu-yun-xu-http-fang-wen/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上网搜，大部分都是jdk8，在<code>%JAVA_HOEE%\jre\lib\</code> 目录下，新建一个文件jaxp.properties。但我TM用的是jdk11，用</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo pacman -S jre11-openjdk-headless jre11-openjdk jdk11-openjdk openjdk11-doc openjdk11-src</span><br></pre></td></tr></table></figure>
+
+<p>安装的，故找不到这个文件。</p>
+<h1 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h1><p>其实解决这个问题也很简单，jdk11把此配置文件换了个位置，放在了</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&#x2F;usr&#x2F;lib&#x2F;jvm&#x2F;java-11-openjdk&#x2F;conf&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>这个目录下，所以我们只要</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo bash -c <span class="string">&#x27;echo &quot;javax.xml.accessExternalSchema=all </span></span><br><span class="line"><span class="string">javax.xml.accessExternalDTD=all&quot; &gt;&gt; /usr/lib/jvm/java-11-openjdk/conf/jaxp.properties&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>即可</p>
+]]></content>
+      <tags>
+        <tag>linux</tag>
       </tags>
   </entry>
   <entry>
